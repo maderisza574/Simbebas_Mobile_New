@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "677857042738",
+    "project_id": "simbebas-f2938",
+    "storage_bucket": "simbebas-f2938.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677857042738:android:cd1e8beffad67db252f72b",
+        "android_client_info": {
+          "package_name": "com.simbebasnew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677857042738-qagudpq0i3gn96ulkppqa8un34alf2vg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simbebasnew",
+            "certificate_hash": "566dc2bd7e09cd7cc1e8ecf69a0f89fb1332d24b"
+          }
+        },
+        {
+          "client_id": "677857042738-m8q2lol945ni7k6ehl4hu1jq061spvk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC11ATolqlGZxo-YF6noTr4paQt0XQz-HM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677857042738-m8q2lol945ni7k6ehl4hu1jq061spvk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

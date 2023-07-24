@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import Logo from '../../assets/img/BPBD.png';
 import {ImageSlider} from 'react-native-image-slider-banner';
 import {ScrollView} from 'react-native-gesture-handler';
 import {color} from 'react-native-reanimated';
+import messaging from '@react-native-firebase/messaging';
 // import Foto from '../../assets/img/';
 
 export default function Home(props) {
@@ -40,6 +41,36 @@ export default function Home(props) {
   const navLogCepat = () => {
     props.navigation.navigate('LogpalCepat');
   };
+
+  const App = async () => {
+    async function requestUserPermission() {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        console.log('Authorization status', authStatus);
+      }
+    }
+    // Handle incoming messages when the app is in the foreground
+    messaging().onMessage(async remoteMessage => {
+      console.log('Received foreground notification:', remoteMessage);
+      // You can handle the notification data here and show custom UI if needed.
+    });
+    // Handle notification when the app is in the background or terminated
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Received background notification:', remoteMessage);
+      // You can handle the notification data here and show custom UI if needed.
+    });
+    // Get the FCM token
+    const token = await messaging().getToken();
+    console.log('FCM Token:', token);
+  };
+
+  useEffect(() => {
+    App();
+  }, []);
   // const nav
 
   return (
