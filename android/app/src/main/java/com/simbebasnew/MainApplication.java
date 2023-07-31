@@ -8,6 +8,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
+// import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 

@@ -13,14 +13,7 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
-      <service
-        android:name="io.invertase.firebase.messaging.RNFirebaseMessagingService">
-        <intent-filter>
-        <action android:name="com.google.firebase.MESSAGING_EVENT" />
-        </intent-filter>
-        </service>
-
+      android:theme="@style/AppTheme"> 
       <meta-data
       android:value="AIzaSyDJn6Nsc_kU477Symn0acKq1Js7C-1ALbI"
       android:name="com.google.android.geo.API_KEY"/>
