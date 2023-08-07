@@ -496,6 +496,7 @@ export default function PusdalopCreate(props) {
 
             <SelectList
               dropdownTextStyles={{color: 'black'}}
+              inputStyles={{color: 'black'}}
               setSelected={handleSelect}
               // setSelected={key => setSelected(key)}
               data={dataJenis}
@@ -520,12 +521,14 @@ export default function PusdalopCreate(props) {
               setSelected={handleJenis}
               placeholder="Pilih Jenis Bencana"
               dropdownTextStyles={{color: 'black'}}
+              inputStyles={{color: 'black'}}
             />
           </View>
           <View>
             <Text style={style.titleOption}>Tanggal Kejadian</Text>
             <TextInput
               placeholder={date.toLocaleDateString()}
+              placeholderTextColor="black"
               style={style.inputTanggal}
               editable={false}
             />
@@ -559,6 +562,7 @@ export default function PusdalopCreate(props) {
                 })
               }
               value={dataPusdalop.isi_aduan}
+              dropdownTextStyles="black"
             />
           </View>
           <View style={{marginTop: 10}}>
@@ -684,6 +688,7 @@ export default function PusdalopCreate(props) {
                     // marginRight: '10%',
                     width: '50%',
                   }}
+                  dropdownTextStyles="black"
                   onChangeText={dataPusdalop =>
                     handleChangeForm(dataPusdalop, 'nama')
                   }
@@ -701,6 +706,7 @@ export default function PusdalopCreate(props) {
                     // marginRight: '1%',
                     width: '50%',
                   }}
+                  dropdownTextStyles="black"
                   onChangeText={text =>
                     setDataPusdalop({
                       ...dataPusdalop,
@@ -726,6 +732,7 @@ export default function PusdalopCreate(props) {
                   save="key"
                   itemKey="key"
                   itemLabel="name"
+                  placeholderTextColor="black"
                   boxStyles={{borderColor: 'black'}}
                   placeholder="Pilih Kecamatan"
                 />
@@ -744,6 +751,7 @@ export default function PusdalopCreate(props) {
                 data={desaOPtion}
                 save="key"
                 itemKey="key"
+                placeholderTextColor="black"
                 itemLabel="name"
                 boxStyles={{borderColor: 'black'}}
                 placeholder="Pilih Desa"
@@ -763,6 +771,7 @@ export default function PusdalopCreate(props) {
                 onChangeText={dataPusdalop =>
                   handleChangeForm(dataPusdalop, 'alamat')
                 }
+                placeholderTextColor="black"
                 // value={dataAlamat}
               />
             </View>
@@ -806,7 +815,11 @@ export default function PusdalopCreate(props) {
                   <TouchableOpacity
                     style={{marginRight: 10, width: 60}}
                     onPress={handleLaunchCamera}>
-                    <Icon name="camera" size={20} style={{marginLeft: 10}} />
+                    <Icon
+                      name="camera"
+                      size={20}
+                      style={{marginLeft: 10, color: 'black'}}
+                    />
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{marginRight: 10, width: 60}}
@@ -814,7 +827,7 @@ export default function PusdalopCreate(props) {
                     <Icon
                       name="folder-images"
                       size={20}
-                      style={{marginLeft: 10}}
+                      style={{marginLeft: 10, color: 'black'}}
                     />
                   </TouchableOpacity>
                 </View>
@@ -832,6 +845,7 @@ export default function PusdalopCreate(props) {
                       marginTop: 5,
                       marginBottom: 10,
                     }}
+                    placeholderTextColor="black"
                     value={dataPusdalop.keteranganImage}
                     onChangeText={text =>
                       setDataPusdalop({

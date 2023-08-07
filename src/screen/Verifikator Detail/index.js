@@ -19,6 +19,7 @@ import axios from '../../utils/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import {Chip} from 'react-native-paper';
+import {color} from 'react-native-reanimated';
 
 export default function VerifikatorDetail(props) {
   const [dataById, setDataByID] = useState({});
@@ -298,7 +299,7 @@ export default function VerifikatorDetail(props) {
             <Text style={{color: 'white'}}>(Verifikator Detail)</Text>
           </View>
           <View style={style.containerInput}>
-            <Text>Perbaiki Isian Data Bencana</Text>
+            <Text style={{color: 'black'}}>Perbaiki Isian Data Bencana</Text>
             <View
               style={{
                 marginBottom: 10,
@@ -324,10 +325,10 @@ export default function VerifikatorDetail(props) {
                 justifyContent: 'space-between',
               }}>
               <View>
-                <Text>Tanggal Kejadian</Text>
+                <Text style={{color: 'black'}}>Tanggal Kejadian</Text>
               </View>
               <View>
-                <Text>
+                <Text style={{color: 'black'}}>
                   {moment(dataById?.data?.tanggal).format(
                     'YYYY-MM-DD h:mm:ss a',
                   )}
@@ -340,7 +341,7 @@ export default function VerifikatorDetail(props) {
               /> */}
             </View>
             <View>
-              <Text>Lokasi Terjadinya Bencana</Text>
+              <Text style={{color: 'black'}}>Lokasi Terjadinya Bencana</Text>
               <View>
                 <MapView
                   region={region}
@@ -378,10 +379,12 @@ export default function VerifikatorDetail(props) {
                 justifyContent: 'space-between',
               }}>
               <View>
-                <Text>Kecamatan</Text>
+                <Text style={{color: 'black'}}>Kecamatan</Text>
               </View>
               <View>
-                <Text>{dataById?.data?.kecamatan?.kecamatan}</Text>
+                <Text style={{color: 'black'}}>
+                  {dataById?.data?.kecamatan?.kecamatan}
+                </Text>
               </View>
               {/* <TextInput
                 placeholder={dataById?.data?.kecamatan?.kecamatan}
@@ -395,10 +398,12 @@ export default function VerifikatorDetail(props) {
                 justifyContent: 'space-between',
               }}>
               <View>
-                <Text>Desa</Text>
+                <Text style={{color: 'black'}}>Desa</Text>
               </View>
               <View>
-                <Text>{dataById?.data?.desa?.desa}</Text>
+                <Text style={{color: 'black'}}>
+                  {dataById?.data?.desa?.desa}
+                </Text>
               </View>
               {/* <TextInput
                 placeholder={dataById?.data?.desa?.desa}
@@ -417,10 +422,10 @@ export default function VerifikatorDetail(props) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text>Alamat</Text>
+                <Text style={{color: 'black'}}>Alamat</Text>
               </View>
               <View>
-                <Text>{dataById?.data?.alamat}</Text>
+                <Text style={{color: 'black'}}>{dataById?.data?.alamat}</Text>
               </View>
               {/* <TextInput
                 placeholder={dataById?.data?.alamat}
@@ -434,27 +439,10 @@ export default function VerifikatorDetail(props) {
                 justifyContent: 'space-between',
               }}>
               <View>
-                <Text>Kerusakan Rumah</Text>
+                <Text style={{color: 'black'}}>Kerusakan Rumah</Text>
               </View>
               <View>
-                <Text>Ringan</Text>
-              </View>
-              {/* <TextInput
-                placeholder="alamat"
-                style={{borderWidth: 1, borderRadius: 10}}
-              /> */}
-            </View>
-            <View
-              style={{
-                marginBottom: 10,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <View>
-                <Text>Cakupan Banjir</Text>
-              </View>
-              <View>
-                <Text>Data Cakupan Banjir</Text>
+                <Text style={{color: 'black'}}>Ringan</Text>
               </View>
               {/* <TextInput
                 placeholder="alamat"
@@ -468,10 +456,27 @@ export default function VerifikatorDetail(props) {
                 justifyContent: 'space-between',
               }}>
               <View>
-                <Text>Deskripsi Kronologis</Text>
+                <Text style={{color: 'black'}}>Cakupan Banjir</Text>
               </View>
               <View>
-                <Text>Data Deskripsi Kronologis</Text>
+                <Text style={{color: 'black'}}>Data Cakupan Banjir</Text>
+              </View>
+              {/* <TextInput
+                placeholder="alamat"
+                style={{borderWidth: 1, borderRadius: 10}}
+              /> */}
+            </View>
+            <View
+              style={{
+                marginBottom: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text style={{color: 'black'}}>Deskripsi Kronologis</Text>
+              </View>
+              <View>
+                <Text style={{color: 'black'}}>Data Deskripsi Kronologis</Text>
               </View>
               {/* <TextInput
                 placeholder="alamat"
@@ -490,10 +495,10 @@ export default function VerifikatorDetail(props) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text>Tindakan</Text>
+                <Text style={{color: 'black'}}>Tindakan</Text>
               </View>
               <View>
-                <Text>Data Tindakan</Text>
+                <Text style={{color: 'black'}}>Data Tindakan</Text>
               </View>
               {/* <TextInput
                 placeholder="Pendataan dan koordinasi dengan perangkat desa"
@@ -512,10 +517,12 @@ export default function VerifikatorDetail(props) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text>Peralatan dibutuhkan</Text>
+                <Text style={{color: 'black'}}>Peralatan dibutuhkan</Text>
               </View>
               <View>
-                <Text>Data Peralatan yang dibutuhkan</Text>
+                <Text style={{color: 'black'}}>
+                  Data Peralatan yang dibutuhkan
+                </Text>
               </View>
               {/* <TextInput
                 placeholder="Pendataan dan koordinasi dengan perangkat desa"
@@ -529,10 +536,10 @@ export default function VerifikatorDetail(props) {
                 justifyContent: 'space-between',
               }}>
               <View>
-                <Text>Rekomendasi</Text>
+                <Text style={{color: 'black'}}>Rekomendasi</Text>
               </View>
               <View>
-                <Text>Data Rekomendasi</Text>
+                <Text style={{color: 'black'}}>Data Rekomendasi</Text>
               </View>
               {/* <TextInput
                 placeholder="Pendataan dan koordinasi dengan perangkat desa"
@@ -551,13 +558,14 @@ export default function VerifikatorDetail(props) {
                 </Text>
               </View>
               <View style={{flexDirection: 'row'}}>
-                <Text>Nama Barang</Text>
-                <Text style={{marginLeft: '55%'}}>Qty</Text>
+                <Text style={{color: 'black'}}>Nama Barang</Text>
+                <Text style={{marginLeft: '55%', color: 'black'}}>Qty</Text>
               </View>
               <View style={{flexDirection: 'row'}}>
                 <View style={{width: '70%'}}>
                   <SelectList
                     dropdownTextStyles={{color: 'black'}}
+                    inputStyles={{color: 'black'}}
                     setSelected={handleDataBarang}
                     data={dataStokBrang}
                     save="key"
@@ -572,6 +580,7 @@ export default function VerifikatorDetail(props) {
                       flex: 1,
                       height: 40,
                       borderColor: 'black',
+                      color: 'black',
                       borderWidth: 1,
                       borderRadius: 5,
                       marginRight: 10,
@@ -633,9 +642,10 @@ export default function VerifikatorDetail(props) {
                   </TouchableOpacity>
                 </View>
                 <View>
-                  <Text style={style.titleOption}>Keterangan</Text>
+                  <Text style={{color: 'black'}}>Keterangan</Text>
                   <TextInput
                     placeholder="Masukan Keterangan gambar"
+                    placeholderTextColor="black"
                     style={{
                       height: 100,
                       width: 350,
@@ -643,6 +653,7 @@ export default function VerifikatorDetail(props) {
                       marginLeft: 15,
                       marginTop: 5,
                       marginBottom: 10,
+                      color: 'black',
                     }}
                     onChangeText={text =>
                       setDataVerifikator({
@@ -653,7 +664,7 @@ export default function VerifikatorDetail(props) {
                   />
                 </View>
                 <View>
-                  <Text style={style.titleOption}>Rekomendasi</Text>
+                  <Text style={{color: 'black'}}>Rekomendasi</Text>
                   <TextInput
                     placeholder="Masukan Rekomendasi"
                     style={{
@@ -664,6 +675,7 @@ export default function VerifikatorDetail(props) {
                       marginTop: 5,
                       marginBottom: 10,
                     }}
+                    placeholderTextColor="black"
                     onChangeText={dataVerifikator =>
                       handleChangeForm(dataVerifikator, 'rekomendasi')
                     }
@@ -677,13 +689,12 @@ export default function VerifikatorDetail(props) {
                   styicon="information"
                   onPress={handleTindakanTRCPress}
                   style={style.styleChip}>
-                  <Icon
-                    name="hand"
-                    size={20}
-                    style={{marginLeft: 5, marginRight: 3}}
-                    selectionColor
-                  />
-                  <Text>Tindakan TRC</Text>
+                  <View>
+                    <Icon name="hand" size={20} selectionColor />
+                  </View>
+                  <View>
+                    <Text>Tindakan TRC</Text>
+                  </View>
                 </Chip>
               </View>
               <View style={{width: '60%', height: '15%'}}>
@@ -692,8 +703,12 @@ export default function VerifikatorDetail(props) {
                   onPress={handlePemberianPress}
                   // onPress={() => console.log('Pressed')}
                   style={style.chipLangsung}>
-                  <Icon name="archive" size={20} selectionColor />
-                  <Text>Pemberian Langsung</Text>
+                  <View>
+                    <Icon name="archive" size={20} selectionColor />
+                  </View>
+                  <View>
+                    <Text>Pemberian Langsung</Text>
+                  </View>
                 </Chip>
               </View>
             </View>
@@ -710,13 +725,12 @@ export default function VerifikatorDetail(props) {
                   onPress={handleKontruksiPress}
                   // onPress={() => console.log('Pressed')}
                   style={style.styleChip}>
-                  <Icon
-                    name="new"
-                    size={20}
-                    style={{marginLeft: 5, marginRight: 3}}
-                    selectionColor
-                  />
-                  <Text>Penangan Kontruksi</Text>
+                  <View>
+                    <Icon name="new" size={20} selectionColor />
+                  </View>
+                  <View>
+                    <Text>Penangan Kontruksi</Text>
+                  </View>
                 </Chip>
               </View>
               <View style={{marginLeft: '3%'}}>
@@ -726,13 +740,12 @@ export default function VerifikatorDetail(props) {
                     onPress={handleAlatPress}
                     // onPress={() => console.log('Pressed')}
                     style={style.styleChip}>
-                    <Icon
-                      name="traffic-cone"
-                      size={20}
-                      style={{marginLeft: 5, marginRight: 3}}
-                      selectionColor
-                    />
-                    <Text>Alat Berat</Text>
+                    <View>
+                      <Icon name="traffic-cone" size={20} selectionColor />
+                    </View>
+                    <View>
+                      <Text>Alat Berat</Text>
+                    </View>
                   </Chip>
                 </View>
               </View>
@@ -744,13 +757,12 @@ export default function VerifikatorDetail(props) {
                   onPress={handleDinasPress}
                   // onPress={() => console.log('Pressed')}
                   style={style.styleChip}>
-                  <Icon
-                    name="users"
-                    size={20}
-                    style={{marginLeft: 5, marginRight: 3}}
-                    selectionColor
-                  />
-                  <Text>Ditangani Dinas Lain</Text>
+                  <View>
+                    <Icon name="users" size={20} selectionColor />
+                  </View>
+                  <View>
+                    <Text>Ditangani Dinas Lain</Text>
+                  </View>
                 </Chip>
               </View>
             </View>

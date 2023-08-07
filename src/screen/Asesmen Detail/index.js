@@ -280,7 +280,9 @@ export default function AsesmenDetail(props) {
               <Text style={style.textTitleInput}>Jenis Bencana</Text>
             </View>
             <View>
-              <Text>{dataById?.data?.bencana?.sub_jenis}</Text>
+              <Text style={{color: 'black'}}>
+                {dataById?.data?.bencana?.sub_jenis}
+              </Text>
             </View>
             {/* <TextInput
               placeholder={dataById?.data?.bencana?.sub_jenis}
@@ -298,7 +300,7 @@ export default function AsesmenDetail(props) {
               <Text style={style.textTitleInput}>Tanggal Kejadian</Text>
             </View>
             <View>
-              <Text>
+              <Text style={{color: 'black'}}>
                 {moment(dataById?.data?.tanggal).format('YYYY-MM-DD h:mm:ss a')}
               </Text>
             </View>
@@ -344,7 +346,9 @@ export default function AsesmenDetail(props) {
               <Text style={style.textTitleInput}>Kecamatan</Text>
             </View>
             <View>
-              <Text>{dataById?.data?.kecamatan?.kecamatan}</Text>
+              <Text style={{color: 'black'}}>
+                {dataById?.data?.kecamatan?.kecamatan}
+              </Text>
             </View>
             {/* <TextInput
               placeholder={dataById?.data?.kecamatan?.kecamatan}
@@ -362,7 +366,7 @@ export default function AsesmenDetail(props) {
               <Text style={style.textTitleInput}>Desa</Text>
             </View>
             <View>
-              <Text>{dataById?.data?.desa?.desa}</Text>
+              <Text style={{color: 'black'}}>{dataById?.data?.desa?.desa}</Text>
             </View>
             {/* <TextInput
               placeholder={dataById?.data?.desa?.desa}
@@ -376,7 +380,7 @@ export default function AsesmenDetail(props) {
               justifyContent: 'space-between',
             }}>
             <Text style={style.textTitleInput}>Alamat</Text>
-            <Text>{dataById?.data?.alamat}</Text>
+            <Text style={{color: 'black'}}>{dataById?.data?.alamat}</Text>
             {/* <TextInput
               placeholder={dataById?.data?.alamat}
               editable={false}
@@ -401,8 +405,9 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Tanggal Asesmen</Text>
             <TextInput
               value={date.toLocaleDateString()}
+              placeholderTextColor="black"
               placeholder={date.toLocaleDateString()}
-              style={{borderWidth: 1, borderRadius: 10}}
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               editable={false}
               onChangeText={text =>
                 setDataAsesemen({
@@ -423,7 +428,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Dampak</Text>
             <TextInput
               placeholder="Dampak"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -436,7 +442,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Kerusakan Fasum</Text>
             <TextInput
               placeholder="Kerusakan Fasum"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -457,7 +464,13 @@ export default function AsesmenDetail(props) {
                 <Text style={style.textAsesmen}>Rusak Ringan</Text>
                 <TextInput
                   placeholder="Ringan"
-                  style={{borderWidth: 1, borderRadius: 10, marginTop: '5%'}}
+                  placeholderTextColor="black"
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    marginTop: '5%',
+                    color: 'black',
+                  }}
                   onChangeText={text =>
                     setDataAsesemen({
                       ...dataAssesmen,
@@ -470,7 +483,13 @@ export default function AsesmenDetail(props) {
                 <Text style={style.textAsesmen}>Rusak Sedang</Text>
                 <TextInput
                   placeholder="Sedang"
-                  style={{borderWidth: 1, borderRadius: 10, marginTop: '5%'}}
+                  placeholderTextColor="black"
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    marginTop: '5%',
+                    color: 'black',
+                  }}
                   onChangeText={text =>
                     setDataAsesemen({
                       ...dataAssesmen,
@@ -483,7 +502,13 @@ export default function AsesmenDetail(props) {
                 <Text style={style.textAsesmen}>Rusak Berat</Text>
                 <TextInput
                   placeholder="Berat"
-                  style={{borderWidth: 1, borderRadius: 10, marginTop: '5%'}}
+                  placeholderTextColor="black"
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    marginTop: '5%',
+                    color: 'black',
+                  }}
                   onChangeText={text =>
                     setDataAsesemen({
                       ...dataAssesmen,
@@ -498,7 +523,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Kerugian</Text>
             <TextInput
               placeholder="Masukan Kerugian"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -519,7 +545,13 @@ export default function AsesmenDetail(props) {
                 <Text style={style.textAsesmen}>Luka Ringan</Text>
                 <TextInput
                   placeholder="Ringan"
-                  style={{borderWidth: 1, borderRadius: 10, marginTop: '5%'}}
+                  placeholderTextColor="black"
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    marginTop: '5%',
+                    color: 'black',
+                  }}
                   onChangeText={text =>
                     setDataAsesemen({
                       ...dataAssesmen,
@@ -532,7 +564,13 @@ export default function AsesmenDetail(props) {
                 <Text style={style.textAsesmen}>Luka Sedang</Text>
                 <TextInput
                   placeholder="Sedang"
-                  style={{borderWidth: 1, borderRadius: 10, marginTop: '5%'}}
+                  placeholderTextColor="black"
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    marginTop: '5%',
+                    color: 'black',
+                  }}
                   onChangeText={text =>
                     setDataAsesemen({
                       ...dataAssesmen,
@@ -545,7 +583,13 @@ export default function AsesmenDetail(props) {
                 <Text style={style.textAsesmen}>Luka Berat</Text>
                 <TextInput
                   placeholder="Berat"
-                  style={{borderWidth: 1, borderRadius: 10, marginTop: '5%'}}
+                  placeholderTextColor="black"
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    marginTop: '5%',
+                    color: 'black',
+                  }}
                   onChangeText={text =>
                     setDataAsesemen({
                       ...dataAssesmen,
@@ -560,7 +604,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Korban Jiwa</Text>
             <TextInput
               placeholder="Korban Jiwa"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -573,7 +618,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Cakupan Bencana</Text>
             <TextInput
               placeholder="Cakupan Bencana"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -586,7 +632,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Potensi Bencana Susulan</Text>
             <TextInput
               placeholder="Potensi Bencana Susulan"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -599,7 +646,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Deskripsi Kronologis</Text>
             <TextInput
               placeholder="Kronologis"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -612,7 +660,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Tindakan akan dilakukan</Text>
             <TextInput
               placeholder="Tindakan"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -625,7 +674,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Peralatan yang dibutuhkan</Text>
             <TextInput
               placeholder="Peralatan"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -638,7 +688,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Kebutuhan mendesak</Text>
             <TextInput
               placeholder="Kebutuhan Mendesak"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -651,7 +702,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Unsur terlibat</Text>
             <TextInput
               placeholder="Unsur Terlibat"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -664,7 +716,8 @@ export default function AsesmenDetail(props) {
             <Text style={style.textTitleInput}>Petugas</Text>
             <TextInput
               placeholder="Petugas"
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholderTextColor="black"
+              style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
               onChangeText={text =>
                 setDataAsesemen({
                   ...dataAssesmen,
@@ -682,22 +735,26 @@ export default function AsesmenDetail(props) {
                 <SelectList
                   setSelected={handleDataBarang}
                   data={dataStokBrang}
+                  placeholderTextColor="black"
+                  dropdownTextStyles={{color: 'black'}}
+                  inputStyles={{color: 'black'}}
                   save="key"
                   item="key"
                   itemLabel="name"
                   placeholder="Pilih Barang"
-                  dropdownTextStyles={{color: 'black'}}
                 />
               </View>
             </View>
             <View>
               <TextInput
                 placeholder="Qty"
+                placeholderTextColor="black"
                 style={{
                   borderWidth: 1,
                   borderRadius: 10,
                   width: '100%',
                   marginTop: '5%',
+                  color: 'black',
                 }}
                 onChangeText={text =>
                   setDataAsesemen({
@@ -764,7 +821,8 @@ export default function AsesmenDetail(props) {
             <View>
               <TextInput
                 placeholder="Masukan Keterangan"
-                style={{borderWidth: 1, borderRadius: 10}}
+                placeholderTextColor="black"
+                style={{borderWidth: 1, borderRadius: 10, color: 'black'}}
                 onChangeText={text =>
                   setDataAsesemen({
                     ...dataAssesmen,
