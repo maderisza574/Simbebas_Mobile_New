@@ -322,6 +322,20 @@ export default function PusdalopCreate(props) {
           Authorization: `Bearer ${datauser}`,
         },
       });
+      const notifData = {
+        title: 'Ada Data Terbaru  Pusdalop',
+        body: 'Mohon periksa dan verifikasi',
+        roles: 'Simasbabe-Admin',
+      };
+      const resultt = await axios({
+        url: 'https://apisimbebas.banyumaskab.go.id/api/v1/sendNotification',
+        method: 'POST',
+        data: notifData,
+        headers: {
+          Authorization: `Bearer ${datauser}`,
+        },
+      });
+
       // console.log('INIII ERORR', result);
       alert('SUKSES MEMBUAT LAPORAN');
       props.navigation.navigate('Pusdalop');

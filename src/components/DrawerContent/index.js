@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {
   DrawerContentScrollView,
@@ -12,6 +12,9 @@ import Avatar from '../../assets/img/john.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function DrawerContent(props) {
+  const [name, setName] = useState('Anonymous');
+  const [roles, setRoles] = useState('Pusdalop');
+
   const handleLogout = async () => {
     try {
       alert('Logout');
@@ -21,6 +24,24 @@ function DrawerContent(props) {
       });
     } catch (error) {}
   };
+  const fetchUserData = async () => {
+    try {
+      const nameFromStorage = await AsyncStorage.getItem('nama');
+      const rolesFromStorage = await AsyncStorage.getItem('role');
+      // if (nameFromStorage && rolesFromStorage) {
+      setName(nameFromStorage);
+      setRoles(rolesFromStorage);
+      // }
+    } catch (error) {
+      console.log('error');
+      // Handle error if needed
+    }
+  };
+  useEffect(() => {
+    // Function to fetch data from AsyncStorage and set the state
+
+    fetchUserData();
+  }, []);
   return (
     <View style={styles.container}>
       <DrawerContentScrollView {...props}>
@@ -29,8 +50,8 @@ function DrawerContent(props) {
             <Image source={Avatar} style={{width: 40, height: 40}} />
           </View>
           <View style={styles.biodata}>
-            <Text style={styles.title}>Anonymous</Text>
-            <Text style={styles.caption}>Pusdalop</Text>
+            <Text style={styles.title}>{name}</Text>
+            <Text style={styles.caption}>{roles}</Text>
           </View>
         </View>
         <DrawerItemList {...props} />
@@ -70,10 +91,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 3,
     fontWeight: 'bold',
+    color: 'black',
   },
   caption: {
     fontSize: 14,
     lineHeight: 14,
+    color: 'black',
   },
   containerSection: {
     marginBottom: 5,

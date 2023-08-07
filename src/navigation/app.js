@@ -72,7 +72,7 @@ function MenuNavigator() {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Gudang Logpal"
         component={GudangLogpal}
         options={{
@@ -81,9 +81,9 @@ function MenuNavigator() {
             <Icon name="inbox" color={color} size={size} />
           ),
         }}
-      />
+      /> */}
       {/* Tindakan TRC*/}
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="TindakanTRC"
         component={TindakanTRC}
         options={{
@@ -92,9 +92,9 @@ function MenuNavigator() {
             <Icon name="flag" color={color} size={size} />
           ),
         }}
-      />
+      /> */}
       {/* Logpal Cepat */}
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="LogpalCepat"
         component={LogpalCepat}
         options={{
@@ -103,7 +103,7 @@ function MenuNavigator() {
             <Icon name="exception1" color={color} size={size} />
           ),
         }}
-      />
+      /> */}
       {/* <Drawer.Screen
         name="Map"
         component={Map}

@@ -13,8 +13,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import Logo from '../../assets/img/BPBD.png';
 import {ImageSlider} from 'react-native-image-slider-banner';
 import {ScrollView} from 'react-native-gesture-handler';
-import {color} from 'react-native-reanimated';
-import messaging from '@react-native-firebase/messaging';
+
 // import Foto from '../../assets/img/';
 
 export default function Home(props) {
@@ -32,46 +31,6 @@ export default function Home(props) {
   const navVerifikator = () => {
     props.navigation.navigate('Verifikator');
   };
-  const navLogpal = () => {
-    props.navigation.navigate('Gudang Logpal');
-  };
-  const navTrc = () => {
-    props.navigation.navigate('TindakanTRC');
-  };
-  const navLogCepat = () => {
-    props.navigation.navigate('LogpalCepat');
-  };
-
-  const App = async () => {
-    async function requestUserPermission() {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        console.log('Authorization status', authStatus);
-      }
-    }
-    // Handle incoming messages when the app is in the foreground
-    messaging().onMessage(async remoteMessage => {
-      console.log('Received foreground notification:', remoteMessage);
-      // You can handle the notification data here and show custom UI if needed.
-    });
-    // Handle notification when the app is in the background or terminated
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Received background notification:', remoteMessage);
-      // You can handle the notification data here and show custom UI if needed.
-    });
-    // Get the FCM token
-    const token = await messaging().getToken();
-    console.log('FCM Token:', token);
-  };
-
-  useEffect(() => {
-    App();
-  }, []);
-  // const nav
 
   return (
     <>
@@ -102,135 +61,109 @@ export default function Home(props) {
         <ScrollView>
           <View>
             <View style={style.grupButton}>
-              <View>
+              <View style={{padding: 5}}>
                 <View
                   style={{
                     backgroundColor: '#FF6A16',
-                    width: 90,
-                    height: 90,
-                    borderRadius: 44 / 1,
+                    width: 80,
+                    height: 80,
+                    borderRadius: 10,
                   }}>
                   <TouchableOpacity
                     onPress={navPusdalop}
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginTop: 5,
+                      marginTop: 10,
                     }}>
                     <Icon name="filetext1" color={'white'} size={50} />
-                    <Text style={{color: 'white'}}>PUSDALOP</Text>
                   </TouchableOpacity>
                 </View>
+                <View style={{padding: 5}}>
+                  <Text style={{color: 'black', fontWeight: 'bold'}}>
+                    Pusdalop
+                  </Text>
+                </View>
               </View>
-              <View>
+              {/* end button 1 */}
+              <View style={{padding: 5}}>
                 <View
                   style={{
                     backgroundColor: '#FF6A16',
-                    width: 90,
-                    height: 90,
-                    borderRadius: 44 / 1,
+                    width: 80,
+                    height: 80,
+                    borderRadius: 10,
                   }}>
                   <TouchableOpacity
                     onPress={navAsesmen}
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginTop: 5,
+                      marginTop: 10,
                     }}>
                     <Icon name="Safety" color={'white'} size={50} />
-                    <Text style={{color: 'white'}}>Asesmen</Text>
                   </TouchableOpacity>
                 </View>
+                <View style={{padding: 5, alignItems: 'center'}}>
+                  <Text style={{color: 'black', fontWeight: 'bold'}}>
+                    Asesmen
+                  </Text>
+                </View>
               </View>
-              <View>
+              {/* end button 2 */}
+              <View style={{padding: 5}}>
                 <View
                   style={{
                     backgroundColor: '#FF6A16',
-                    width: 90,
-                    height: 90,
-                    borderRadius: 44 / 1,
+                    width: 80,
+                    height: 80,
+                    borderRadius: 10,
                   }}>
                   <TouchableOpacity
                     onPress={navVerifikator}
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginTop: 5,
+                      marginTop: 10,
                     }}>
                     <Icon name="team" color={'white'} size={50} />
-                    <Text style={{color: 'white'}}>Verifikator</Text>
                   </TouchableOpacity>
                 </View>
+                <View style={{padding: 5, alignItems: 'center'}}>
+                  <Text style={{color: 'black', fontWeight: 'bold'}}>
+                    Verifikator
+                  </Text>
+                </View>
               </View>
-            </View>
-            <View style={style.grupButton2}>
-              <View>
+              {/* end button 3 */}
+              <View style={{padding: 5}}>
                 <View
                   style={{
                     backgroundColor: '#FF6A16',
-                    width: 90,
-                    height: 90,
-                    borderRadius: 44 / 1,
+                    width: 80,
+                    height: 80,
+                    borderRadius: 10,
                   }}>
                   <TouchableOpacity
                     // onPress={alert('FITUR BELUM TERSEDIA')}
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginTop: 5,
-                    }}>
-                    <Icon name="inbox" color={'white'} size={50} />
-                    <Text style={{color: 'white'}}>Logpal</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View>
-                <View
-                  style={{
-                    backgroundColor: '#FF6A16',
-                    width: 90,
-                    height: 90,
-                    borderRadius: 44 / 1,
-                  }}>
-                  <TouchableOpacity
-                    // onPress={alert('FITUR BELUM TERSEDIA')}
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 5,
+                      marginTop: 8,
                     }}>
                     <View
                       style={{alignItems: 'center', justifyContent: 'center'}}>
                       <View style={{marginLeft: '10%', marginTop: '6%'}}>
                         <Icon name="flag" color={'white'} size={50} />
                       </View>
-                      <View>
-                        <Text style={{color: 'white'}}>TRC</Text>
-                      </View>
                     </View>
                   </TouchableOpacity>
                 </View>
-              </View>
-              <View>
-                <View
-                  style={{
-                    backgroundColor: '#FF6A16',
-                    width: 90,
-                    height: 90,
-                    borderRadius: 44 / 1,
-                  }}>
-                  <TouchableOpacity
-                    // onPress={alert('FITUR BELUM TERSEDIA')}
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 5,
-                    }}>
-                    <Icon name="exception1" color={'white'} size={50} />
-                    <Text style={{color: 'white'}}>LogCepat</Text>
-                  </TouchableOpacity>
+                <View style={{padding: 5, alignItems: 'center'}}>
+                  <Text style={{color: 'black', fontWeight: 'bold'}}>TRC</Text>
                 </View>
               </View>
+              {/* end button 4 */}
             </View>
           </View>
           <View
@@ -238,39 +171,43 @@ export default function Home(props) {
               paddingHorizontal: '3%',
               marginTop: '2%',
             }}>
-            <View>
-              <Text
-                style={{
-                  color: 'black',
-                  fontWeight: 'bold',
-                }}>
-                Banner
-              </Text>
-            </View>
             <View
               style={{
                 width: '100%',
-                height: '80%',
+                height: '100%',
                 borderRadius: 5,
-                marginTop: -30,
+                paddingVertical: -50,
               }}>
-              <ImageSlider
-                data={[
-                  {
-                    img: 'https://monitorindonesia.com/wp-content/uploads/2022/05/WhatsApp-Image-2022-05-16-at-16.25.20.jpeg',
-                  },
-                  {
-                    img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg8cikBsNwefxO12X8Q3QxwME_YxKu9iRahA&usqp=CAU',
-                  },
-                  {
-                    img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGHmFWobSfzJNBV_NL2Gb0wKxbfwtabxy1mg&usqp=CAU',
-                  },
-                ]}
-                autoPlay={true}
-                timer={5000}
-                // onItemChanged={item => console.log('item', item)}
-                closeIconColor="#fff"
-              />
+              <View>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bold',
+                    marginTop: '10%',
+                    paddingHorizontal: 5,
+                  }}>
+                  Banner
+                </Text>
+              </View>
+              <View style={{marginTop: '-5%'}}>
+                <ImageSlider
+                  data={[
+                    {
+                      img: 'https://monitorindonesia.com/wp-content/uploads/2022/05/WhatsApp-Image-2022-05-16-at-16.25.20.jpeg',
+                    },
+                    {
+                      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg8cikBsNwefxO12X8Q3QxwME_YxKu9iRahA&usqp=CAU',
+                    },
+                    {
+                      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGHmFWobSfzJNBV_NL2Gb0wKxbfwtabxy1mg&usqp=CAU',
+                    },
+                  ]}
+                  autoPlay={true}
+                  timer={7000}
+                  // onItemChanged={item => console.log('item', item)}
+                  closeIconColor="#fff"
+                />
+              </View>
             </View>
           </View>
         </ScrollView>

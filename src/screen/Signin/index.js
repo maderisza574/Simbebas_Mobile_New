@@ -15,11 +15,11 @@ import Logo from '../../assets/img/BPBD.png';
 import {login} from '../../stores/actions/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
+import messaging from '@react-native-firebase/messaging';
 
 export default function Signin(props) {
   const dispatch = useDispatch();
   const [form, setForm] = useState({});
-  console.log('INI DATA FROM', form);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const auth = useSelector(state => state.auth);
@@ -36,20 +36,31 @@ export default function Signin(props) {
     try {
       setErrorMessage('Terjadi Gangguan Koneksi');
       setIsLoading(true);
+      const firebaseToken = await messaging().getToken();
+      // console.log('INI DATA TOKEN LOGIN', firebaseToken);
       if (!form.username || !form.password) {
         setIsLoading(false);
         return setErrorMessage('Please fill in all required fields.');
       }
-      // const result = await dispatch(login(form));
+      const requestData = {
+        ...form,
+        firebaseToken: firebaseToken,
+      };
       const result = await axios.post(
         'https://apisimbebas.banyumaskab.go.id/api/v1/login',
-        form,
+        requestData,
       );
-      console.log(result);
+
       await AsyncStorage.setItem('token', result.data.data.token);
       await AsyncStorage.setItem('refreshToken', result.data.data.refreshToken);
-      await AsyncStorage.setItem('nama', result.data.data.username);
+      await AsyncStorage.setItem('username', result.data.data.username);
+      await AsyncStorage.setItem('nama', result.data.data.nama);
+      await AsyncStorage.setItem('role', result.data.data.roles);
+      await AsyncStorage.setItem('firebaseToken', firebaseToken);
+      // Assuming the props object is being passed as a parameter to the function
       props.navigation.replace('AppScreen', {screen: 'MenuNavigator'});
+
+      console.log('INI DATA RESULT', result);
       alert('sukses');
     } catch (error) {
       alert('gagal');
