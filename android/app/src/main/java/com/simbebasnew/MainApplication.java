@@ -9,6 +9,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 // import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import com.zmxv.RNSound.RNSoundPackage;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
+          new RNSoundPackage();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           return packages;
