@@ -16,6 +16,11 @@ const {store, persistor} = stores;
 const App = () => {
   // const [loading, setLoading] = useState(true);
   const [notificationData, setNotificationData] = useState(null);
+  const alarmSound = new Sound('alarm.wav', Sound.MAIN_BUNDLE, error => {
+    if (error) {
+      console.log('Error initializing sound:', error);
+    }
+  });
 
   const handleForegroundNotification = async remoteMessage => {
     // Handle foreground notification logic...
@@ -24,6 +29,13 @@ const App = () => {
       body: remoteMessage.notification.body,
       text: remoteMessage.notification.text,
     });
+    PushNotification.localNotification({
+      channelId: 'default-channel-id', // Make sure to use the same channel ID as defined in the notification config
+      title: remoteMessage.notification.title,
+      message: remoteMessage.notification.body,
+      soundName: 'ini.mp3', // Replace with the name of your custom sound file
+    });
+    alarmSound.play();
   };
   const handleBackgroundNotification = notification => {
     console.log('INI DARI BACKGROUND', notification);
@@ -34,8 +46,9 @@ const App = () => {
       channelId: 'default-channel-id', // Make sure to use the same channel ID as defined in the notification config
       title: notification.title,
       message: notification.body,
-      soundName: require('../simbebasnew/android/app/src/main/res/raw/ini.mp3'), // Replace with the name of your custom sound file
+      soundName: 'ini.mp3', // Replace with the name of your custom sound file
     });
+    alarmSound.play();
   };
 
   useEffect(() => {

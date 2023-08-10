@@ -8,7 +8,7 @@ const createNotificationChannel = () => {
       channelName: 'Default Channel',
       channelDescription: 'A default channel for notifications',
       playSound: true,
-      soundName: 'ini',
+      soundName: 'alarm.wav',
       importance: Importance.HIGH, // Sets the priority for heads-up notifications on Android 5 and above
       vibrate: true,
     },
