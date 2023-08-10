@@ -47,10 +47,7 @@ export default function Home(props) {
               marginLeft: '10%',
               marginTop: '30%',
               position: 'absolute',
-            }}>
-            <Text style={style.textSim}>SIM</Text>
-            <Text style={style.textBebas}>BEBAS</Text>
-          </View>
+            }}></View>
           <View style={{marginLeft: '40%', marginTop: '10%', width: '50%'}}>
             <Text style={style.textwelcome}>
               Selamat Datang di aplikasi SIMBEBAS, untuk memulai tombol menu
@@ -59,9 +56,9 @@ export default function Home(props) {
           </View>
         </View>
         <ScrollView>
-          <View>
+          <View style={{paddingHorizontal: 5}}>
             <View style={style.grupButton}>
-              <View style={{padding: 5}}>
+              <View style={{marginRight: 5}}>
                 <View
                   style={{
                     backgroundColor: '#FF6A16',
@@ -86,7 +83,7 @@ export default function Home(props) {
                 </View>
               </View>
               {/* end button 1 */}
-              <View style={{padding: 5}}>
+              <View style={{marginRight: 5}}>
                 <View
                   style={{
                     backgroundColor: '#FF6A16',
@@ -111,7 +108,7 @@ export default function Home(props) {
                 </View>
               </View>
               {/* end button 2 */}
-              <View style={{padding: 5}}>
+              <View style={{marginRight: 5}}>
                 <View
                   style={{
                     backgroundColor: '#FF6A16',
@@ -136,7 +133,7 @@ export default function Home(props) {
                 </View>
               </View>
               {/* end button 3 */}
-              <View style={{padding: 5}}>
+              <View style={{marginRight: 5}}>
                 <View
                   style={{
                     backgroundColor: '#FF6A16',

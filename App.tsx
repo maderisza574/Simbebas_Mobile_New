@@ -18,106 +18,45 @@ const App = () => {
   const [notificationData, setNotificationData] = useState(null);
 
   const handleForegroundNotification = async remoteMessage => {
-    // console.log('INI DARI FOREGROUND', remoteMessage);
-    const {title, body, text} = remoteMessage.notification;
-    // showNotification({title, body}); // Call the showNotification function with the notification object
-    const sound = new Sound(
-      require('./android/app/src/main/res/raw/ini.mp3'),
-      Sound.MAIN_BUNDLE,
-      error => {
-        if (error) {
-          console.log('Error loading sound:', error);
-          return;
-        }
-        // Play the sound
-        sound.play(success => {
-          if (success) {
-            console.log('Notification sound played successfully');
-          } else {
-            console.log('Notification sound playback failed');
-          }
-          // Release the sound after playing
-          sound.release();
-        });
-      },
-    );
-    setNotificationData({title, body, text});
+    // Handle foreground notification logic...
+    setNotificationData({
+      title: remoteMessage.notification.title,
+      body: remoteMessage.notification.body,
+      text: remoteMessage.notification.text,
+    });
   };
-
   const handleBackgroundNotification = notification => {
     console.log('INI DARI BACKGROUND', notification);
-    // Add your custom logic to handle the background notification here
-    // You can show a local notification, update state, or perform any other action
+    // Handle background notification logic...
+
+    // Show a local notification with a custom sound
+    PushNotification.localNotification({
+      channelId: 'default-channel-id', // Make sure to use the same channel ID as defined in the notification config
+      title: notification.title,
+      message: notification.body,
+      soundName: require('../simbebasnew/android/app/src/main/res/raw/ini.mp3'), // Replace with the name of your custom sound file
+    });
   };
-
-  // const showNotification = notification => {
-  //   PushNotification.localNotification({
-  //     channelId: 'default-channel-id', // Make sure to use the same channel ID as defined in the notification config
-  //     title: notification.title,
-  //     message: notification.body,
-  //   });
-  // };
-
-  // const Appss = async () => {
-  //   async function requestUserPermission() {
-  //     const authStatus = await messaging().requestPermission();
-  //     const enabled =
-  //       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-  //     if (enabled) {
-  //       console.log('Authorization status', authStatus);
-  //     }
-  //   }
-
-  //   // Handle incoming messages when the app is in the foreground
-  //   messaging().onMessage(handleForegroundNotification);
-
-  //   // Handle incoming messages when the app is in the background or closed
-  //   PushNotification.configure({
-  //     onNotification: handleBackgroundNotification,
-  //     // ... other configuration options ...
-  //   });
-
-  //   // Get the FCM token
-  //   const token = await messaging().getToken();
-  //   console.log('FCM Token:', token);
-
-  //   // Show the notification when the app opens (modify this with your own content)
-  //   showNotification({
-  //     title: 'Selamat Datang di Simbebas',
-  //     body: 'Terimakasih telah menggunakan Simbebas',
-  //   });
-  // };
 
   useEffect(() => {
     createNotificationChannel();
     messaging().onMessage(handleForegroundNotification);
-    // Call the function to create the notification channel
-    // Appss();
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+      // Handle background notifications here
+      // ...
+    });
+    PushNotification.configure({
+      onNotification: handleBackgroundNotification,
+      // ... other configuration options ...
+    });
+
     return () => {
-      // Cleanup by removing the message event handler when the component unmounts
       messaging()
         .onMessageSubscription()
         .then(subscription => subscription.unsubscribe())
         .catch(error => console.error('Unsubscribe error:', error));
     };
-    // const sound = new Sound(notificationSound, Sound.MAIN_BUNDLE, error => {
-    //   if (error) {
-    //     console.log('Error loading sound:', error);
-    //     return;
-    //   }
-    //   // Play the sound
-    //   sound.play(success => {
-    //     if (success) {
-    //       console.log('Sound played successfully');
-    //     } else {
-    //       console.log('Sound playback failed');
-    //     }
-    //     // Release the sound after playing
-    //     sound.release();
-    //   });
-    // });
   }, []);
 
   return (
