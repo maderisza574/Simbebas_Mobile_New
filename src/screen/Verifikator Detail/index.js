@@ -31,6 +31,10 @@ export default function VerifikatorDetail(props) {
   const lng = parseFloat(dataById?.data?.lng);
   const defaultLat = -7.43973580004;
   const defaultLng = 109.244402567;
+  const navVerifikator = () => {
+    props.navigation.navigate('Verifikator');
+  };
+
   const pusdalopid = props.route.params.pusdalopId;
   const [stateMap, setStateMap] = useState({
     latitude: null || -7.431391,
@@ -792,7 +796,8 @@ export default function VerifikatorDetail(props) {
                 marginTop: '5%',
               }}>
               <Pressable
-                style={{justifyContent: 'center', alignItems: 'center'}}>
+                style={{justifyContent: 'center', alignItems: 'center'}}
+                onPress={navVerifikator}>
                 <Text
                   style={{color: 'white', fontWeight: 'bold', marginTop: '2%'}}>
                   Batal

@@ -340,6 +340,27 @@ export default function PusdalopCreate(props) {
       alert('SUKSES MEMBUAT LAPORAN');
       props.navigation.navigate('Pusdalop');
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 403) {
+          // Handle 403 Forbidden error
+          alert(
+            'Permission denied. You are not authorized to perform this action.',
+          );
+        } else {
+          // Handle other Axios errors
+          alert(
+            'An error occurred while sending the report. Please try again.',
+          );
+        }
+      } else {
+        // Handle non-Axios errors
+        alert('An unexpected error occurred. Please try again later.');
+      }
+
+      console.log('INIII ERORR', error.message);
+      if (error.response) {
+        console.log('Error response data:', error.response.data);
+      }
       console.log('INIII ERORR', error.message);
       alert('SESI ANDA SUDAH BERAKHIR');
       await AsyncStorage.clear();
@@ -562,7 +583,6 @@ export default function PusdalopCreate(props) {
                 })
               }
               value={dataPusdalop.isi_aduan}
-              dropdownTextStyles="black"
             />
           </View>
           <View style={{marginTop: 10}}>
@@ -647,15 +667,17 @@ export default function PusdalopCreate(props) {
                     flexDirection: 'row',
                   }}>
                   <TextInput
-                    value={`${region.latitude}`}
+                    value={region.latitude.toString()}
                     editable={false}
                     placeholder={dataPusdalop.lat.toString()}
+                    style={{color: 'black'}}
                   />
                   <TextInput
-                    value={`${region.longitude}`}
+                    value={region.longitude.toString()}
                     editable={false}
                     placeholder={dataPusdalop.lng.toString()}
                     keyboardtype="numeric"
+                    style={{color: 'black'}}
                   />
                 </View>
               )}
@@ -683,8 +705,9 @@ export default function PusdalopCreate(props) {
                   placeholder="Masukan Nama"
                   style={{
                     borderWidth: 1,
-                    borderColor: 'Black',
+                    borderColor: 'black',
                     borderRadius: 10,
+                    color: 'black',
                     // marginRight: '10%',
                     width: '50%',
                   }}
@@ -700,9 +723,10 @@ export default function PusdalopCreate(props) {
                   placeholder="Masukan No telp"
                   style={{
                     borderWidth: 1,
-                    borderColor: 'Black',
+                    borderColor: 'black',
                     borderRadius: 10,
                     marginLeft: '3%',
+                    color: 'black',
                     // marginRight: '1%',
                     width: '50%',
                   }}
@@ -732,6 +756,8 @@ export default function PusdalopCreate(props) {
                   save="key"
                   itemKey="key"
                   itemLabel="name"
+                  dropdownTextStyles={{color: 'black'}}
+                  inputStyles={{color: 'black'}}
                   placeholderTextColor="black"
                   boxStyles={{borderColor: 'black'}}
                   placeholder="Pilih Kecamatan"
@@ -752,6 +778,8 @@ export default function PusdalopCreate(props) {
                 save="key"
                 itemKey="key"
                 placeholderTextColor="black"
+                inputStyles={{color: 'black'}}
+                dropdownTextStyles={{color: 'black'}}
                 itemLabel="name"
                 boxStyles={{borderColor: 'black'}}
                 placeholder="Pilih Desa"
@@ -844,9 +872,10 @@ export default function PusdalopCreate(props) {
                       marginLeft: 15,
                       marginTop: 5,
                       marginBottom: 10,
+                      color: 'black',
                     }}
                     placeholderTextColor="black"
-                    value={dataPusdalop.keteranganImage}
+                    value={dataPusdalop.keteranganImage.join('\n')}
                     onChangeText={text =>
                       setDataPusdalop({
                         ...dataPusdalop,

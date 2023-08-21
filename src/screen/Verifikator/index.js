@@ -96,11 +96,17 @@ export default function Verifikator(props) {
         </View>
       </View>
       <View style={style.containerInput}>
-        <View style={style.containerButton}>
-          <View>
-            <Text style={style.texttitle}>Riwayat Bencana</Text>
-          </View>
-        </View>
+        {/* <View> */}
+        <Text
+          style={{
+            color: 'black',
+            paddingHorizontal: 10,
+            paddingVertical: 10,
+            fontWeight: 'bold',
+          }}>
+          Riwayat Bencana
+        </Text>
+        {/* </View> */}
         <View style={style.containerFlat}>
           <FlatList
             data={dataVerif}
@@ -200,9 +206,11 @@ const style = StyleSheet.create({
     marginVertical: 8,
     // Set shadow radius
   },
-  texttitle: {
-    color: 'black',
-  },
+  // texttitle: {
+  //   color: 'black',
+  //   paddingHorizontal: 10,
+  //   // paddingVertical: 10,
+  // },
   buttonLogin: {
     paddingVertical: 10,
     paddingHorizontal: 32,

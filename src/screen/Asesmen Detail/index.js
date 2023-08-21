@@ -38,6 +38,9 @@ export default function AsesmenDetail(props) {
   const defaultLat = -7.43973580004;
   const defaultLng = 109.244402567;
   //  for map
+  const navAsesmen = () => {
+    props.navigation.navigate('Asesmen');
+  };
 
   const handlegetPusdalopId = async () => {
     try {
@@ -838,7 +841,7 @@ export default function AsesmenDetail(props) {
             </Pressable>
           </View>
           <View>
-            <Pressable style={style.buttonBatal}>
+            <Pressable style={style.buttonBatal} onPress={navAsesmen}>
               <Text style={style.textLogin}>Batal</Text>
             </Pressable>
           </View>

@@ -1,12 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, StyleSheet, Image, Pressable} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Image,
+  Pressable,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import {getDataPusdalop} from '../../stores/actions/pusdalop';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import {TouchableHighlight} from 'react-native-gesture-handler';
 
-export default function Pusdalop(props) {
+export default function PenangananView(props) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const pusdalop = useSelector(state => state.pusdalop.data);
@@ -30,10 +38,9 @@ export default function Pusdalop(props) {
   const navPusdalopDetail = () => {
     props.navigation.navigate('PusdalopCreate');
   };
-  const navPusdalop = id => {
-    // setDataPusdalop(id);
-    // console.log('ini id flat list', id);
-    props.navigation.navigate('PusdalopDetail', {pusdalopId: id});
+
+  const naVPenanganan = id => {
+    props.navigation.navigate('Penanganan', {pusdalopId: id});
   };
   const handleRefresh = () => {
     setRefreshing(true);
@@ -42,9 +49,7 @@ export default function Pusdalop(props) {
   const handleEndReached = () => {
     dispatch(getDataPusdalop());
   };
-  const renderItem = ({item}) => {
-    // render your item here
-  };
+
   return (
     <View>
       <View style={style.titleScreen}>
@@ -62,7 +67,7 @@ export default function Pusdalop(props) {
           />
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Text style={{color: 'white'}}>Data Lapor Bencana</Text>
-            <Text style={{color: 'white'}}>(PUSDALOP)</Text>
+            <Text style={{color: 'white'}}>(Penanganan)</Text>
           </View>
         </View>
       </View>
@@ -99,8 +104,8 @@ export default function Pusdalop(props) {
               onEndReached={handleEndReached}
               onEndReachedThreshold={0.5}
               renderItem={({item}) => (
-                <TouchableHighlight
-                  onPress={() => navPusdalop(item.id)}
+                <TouchableOpacity
+                  onPress={() => naVPenanganan(item.id)}
                   underlayColor="#eeeedd">
                   <View style={style.card}>
                     <View style={{flexDirection: 'row'}}>
@@ -131,7 +136,7 @@ export default function Pusdalop(props) {
                         }}></View>
                     </View>
                   </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
               )}
               keyExtractor={item => item.id}
               ItemSeparatorComponent={() => <View style={{height: 5}} />}

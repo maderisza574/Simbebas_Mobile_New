@@ -31,6 +31,12 @@ export default function Home(props) {
   const navVerifikator = () => {
     props.navigation.navigate('Verifikator');
   };
+  const naVPenanganan = () => {
+    props.navigation.navigate('Penanganan');
+  };
+  const navPennagananView = () => {
+    props.navigation.navigate('PenangananView');
+  };
 
   return (
     <>
@@ -142,6 +148,7 @@ export default function Home(props) {
                     borderRadius: 10,
                   }}>
                   <TouchableOpacity
+                    onPress={navPennagananView}
                     // onPress={alert('FITUR BELUM TERSEDIA')}
                     style={{
                       justifyContent: 'center',
@@ -157,7 +164,9 @@ export default function Home(props) {
                   </TouchableOpacity>
                 </View>
                 <View style={{padding: 5, alignItems: 'center'}}>
-                  <Text style={{color: 'black', fontWeight: 'bold'}}>TRC</Text>
+                  <Text style={{color: 'black', fontWeight: 'bold'}}>
+                    Penanganan
+                  </Text>
                 </View>
               </View>
               {/* end button 4 */}

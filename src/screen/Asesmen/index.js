@@ -207,5 +207,8 @@ const style = StyleSheet.create({
   },
   texttitle: {
     color: 'black',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    fontWeight: 'bold',
   },
 });

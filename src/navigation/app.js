@@ -20,10 +20,11 @@ import HeaderDefault from '../components/Header/default';
 import Asesmen from '../screen/Asesmen';
 import Verifikator from '../screen/Verifikator';
 import AsesmenDetail from '../screen/Asesmen Detail';
+import PenangananView from '../screen/Penanganan View';
 import Counter from '../screen/Counter';
 import GudangLogpal from '../screen/Gudang Logpal';
 import TambahLogpal from '../screen/Tambah Logpal';
-import TindakanTRC from '../screen/TindakanTrc';
+import Penanganan from '../screen/Penanganan';
 import LogpalCepat from '../screen/Logpal Cepat';
 import LogpalCepatDetail from '../screen/Logpal Cepat Detail';
 import VerifikatorDetail from '../screen/Verifikator Detail';
@@ -83,16 +84,16 @@ function MenuNavigator() {
         }}
       /> */}
       {/* Tindakan TRC*/}
-      {/* <Drawer.Screen
-        name="TindakanTRC"
-        component={TindakanTRC}
+      <Drawer.Screen
+        name="Penanganan"
+        component={Penanganan}
         options={{
           header: props => <HeaderDefault {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon name="flag" color={color} size={size} />
           ),
         }}
-      /> */}
+      />
       {/* Logpal Cepat */}
       {/* <Drawer.Screen
         name="LogpalCepat"
@@ -196,6 +197,16 @@ export default function AppStackNavigator() {
         options={{
           header: props => <HeaderDefault {...props} />,
         }}
+      />
+      <Stack.Screen
+        name="PenangananView"
+        component={PenangananView}
+        options={{header: props => <HeaderDefault {...props} />}}
+      />
+      <Stack.Screen
+        name="Penanganan"
+        component={Penanganan}
+        options={{header: props => <HeaderDefault {...props} />}}
       />
     </Stack.Navigator>
   );
