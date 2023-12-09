@@ -49,6 +49,12 @@ export default function Signin(props) {
       const result = await axios.post(
         'https://apisimbebas.banyumaskab.go.id/api/v1/login',
         requestData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
       );
 
       await AsyncStorage.setItem('token', result.data.data.token);
@@ -63,6 +69,7 @@ export default function Signin(props) {
       console.log('INI DATA RESULT', result);
       alert('sukses');
     } catch (error) {
+      console.log(error);
       alert('gagal');
       setIsLoading(false);
     }
