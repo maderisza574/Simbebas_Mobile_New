@@ -40,6 +40,7 @@ export default function PusdalopCreate(props) {
   const [date, setDate] = useState(new Date());
   const [kecamatanOption, setKecamatanOption] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(0);
+  console.log('INI KEY KECAMATAN', keyKecamatan);
   const [desaOPtion, setDesaOption] = useState([]);
   const [inputs, setInputs] = useState([{value: '', image: null}]);
   const [images, setImages] = useState([]);
@@ -146,7 +147,9 @@ export default function PusdalopCreate(props) {
       setTimeout(() => {
         axioses
           .get(
-            `/v1/desa?page=1&perPage=1000&kecamatanId=${keyKecamatan.kecamatanId}`,
+            `/v1/desa?page=1&perPage=1000&kecamatanId=${
+              keyKecamatan.kecamatanId || 0
+            }`,
           )
           .then(res => {
             let newArray = res.data.rows.map(item => {
@@ -741,7 +744,7 @@ export default function PusdalopCreate(props) {
               <Text style={style.titleOption}>Desa</Text>
             </View>
             <View>
-              {keyKecamatan !== null ? (
+              {keyKecamatan !== 0 ? (
                 <SelectList
                   setSelected={handleDesa}
                   data={desaOPtion}
