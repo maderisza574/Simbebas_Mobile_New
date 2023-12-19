@@ -164,8 +164,9 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation "com.google.android.gms:play-services-location:20.0.0"
-    
+    implementation 'com.google.android.gms:play-services-location:21.0.1' 
+    implementation (project(path: ':react-native-geolocation-service')) 
+    { exclude group: 'com.google.android.gms', module: 'play-services-location' }   
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 

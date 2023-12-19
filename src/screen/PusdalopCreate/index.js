@@ -26,8 +26,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {createDataPusdalop} from '../../stores/actions/pusdalop';
 import NetInfo from '@react-native-community/netinfo';
-// import Geolocation from 'react-native-geolocation-service';
-import GetLocation from 'react-native-get-location';
+import Geolocation from 'react-native-geolocation-service';
+// import GetLocation from 'react-native-get-location';
 export default function PusdalopCreate(props) {
   // redux
   const dispatch = useDispatch();
@@ -67,64 +67,46 @@ export default function PusdalopCreate(props) {
   const [isLoading, setIsLoading] = useState(true);
   // console.log('INI DATA MAP', region);
   const requestLocationPermission = async () => {
+    console.log("FUNCTION MAP JALAN");
     try {
-      const permission =
-        Platform.OS === 'ios'
-          ? PermissionsIOS.LOCATION_WHEN_IN_USE
-          : PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION;
-
-      const granted = await PermissionsAndroid.request(permission, {
-        title: 'Location Permission',
-        message: 'SIMBEBAS MEMBUTUHKAN LOKASI ANDA',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      });
-
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'SIMBEBAS MEMBUTUHKAN LOKASI ANDA',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setLoading(true);
-
-        NetInfo.fetch().then(state => {
-          const handleLocation = position => {
+        const watchId = Geolocation.getCurrentPosition(
+          position => {
+            console.log("DATA LOKASI", position);
             setRegion({
               ...region,
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
             });
-
             setDataPusdalop({
               ...dataPusdalop,
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             });
-
             setLoading(false);
-            console.log('Location Data:', {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            });
-          };
-
-          const handleError = error => {
-            console.log(error.code, error.message);
-            // Handle error or use a default location
+            // Geolocation.clearWatch(watchId); // Stop watching location
+          },
+          error => {
+            if (error.code === error.TIMEOUT) {
+              alert('Position unavailable. Please try again later.');
+            } else {
+              alert('An error occurred while retrieving your location.');
+            }
             setLoading(false);
-          };
-
-          const locationOptions = {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 10000,
-          };
-
-          if (state.isConnected) {
-            // Internet connection is available
-            GetLocation.getCurrentPosition(handleLocation, handleError, locationOptions);
-          } else {
-            // No internet connection
-            GetLocation.getCurrentPosition(handleLocation, handleError, locationOptions);
-          }
-        });
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
       } else {
         alert('Error', 'ALAMAT YANG ANDA MASUKAN SALAH');
       }
@@ -132,7 +114,7 @@ export default function PusdalopCreate(props) {
       console.warn(err);
     }
   };
-
+  
   useEffect(() => {
     requestLocationPermission();
   }, []);
@@ -579,19 +561,30 @@ export default function PusdalopCreate(props) {
                   });
                 }}>
                 <Marker
-                  draggable
-                  coordinate={{
-                    latitude: region.latitude,
-                    longitude: region.longitude,
-                  }}
-                  onDragEnd={e =>
-                    setMapRegion({
-                      ...mapRegion,
-                      latitude: e.nativeEvent.coordinate.latitude,
-                      longitude: e.nativeEvent.coordinate.longitude,
-                    })
-                  }
-                />
+  draggable
+  coordinate={{
+    latitude: region.latitude,
+    longitude: region.longitude,
+  }}
+  onDragEnd={e => {
+    setRegion({
+      ...region,
+      latitude: e.nativeEvent.coordinate.latitude,
+      longitude: e.nativeEvent.coordinate.longitude,
+    });
+    setDataPusdalop({
+      ...dataPusdalop,
+      lat: e.nativeEvent.coordinate.latitude,
+      lng: e.nativeEvent.coordinate.longitude,
+    });
+    // setMapRegion({
+    //   ...mapRegion,
+    //   latitude: e.nativeEvent.coordinate.latitude,
+    //   longitude: e.nativeEvent.coordinate.longitude,
+    // });
+  }}
+/>
+
               </MapView>
               <View
                 style={{
