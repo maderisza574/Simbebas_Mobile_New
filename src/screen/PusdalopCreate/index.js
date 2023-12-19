@@ -67,7 +67,7 @@ export default function PusdalopCreate(props) {
   const [isLoading, setIsLoading] = useState(true);
   // console.log('INI DATA MAP', region);
   const requestLocationPermission = async () => {
-    console.log("FUNCTION MAP JALAN");
+    console.log('FUNCTION MAP JALAN');
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -83,7 +83,7 @@ export default function PusdalopCreate(props) {
         setLoading(true);
         const watchId = Geolocation.getCurrentPosition(
           position => {
-            console.log("DATA LOKASI", position);
+            console.log('DATA LOKASI', position);
             setRegion({
               ...region,
               latitude: position.coords.latitude,
@@ -114,7 +114,7 @@ export default function PusdalopCreate(props) {
       console.warn(err);
     }
   };
-  
+
   useEffect(() => {
     requestLocationPermission();
   }, []);
@@ -561,30 +561,29 @@ export default function PusdalopCreate(props) {
                   });
                 }}>
                 <Marker
-  draggable
-  coordinate={{
-    latitude: region.latitude,
-    longitude: region.longitude,
-  }}
-  onDragEnd={e => {
-    setRegion({
-      ...region,
-      latitude: e.nativeEvent.coordinate.latitude,
-      longitude: e.nativeEvent.coordinate.longitude,
-    });
-    setDataPusdalop({
-      ...dataPusdalop,
-      lat: e.nativeEvent.coordinate.latitude,
-      lng: e.nativeEvent.coordinate.longitude,
-    });
-    // setMapRegion({
-    //   ...mapRegion,
-    //   latitude: e.nativeEvent.coordinate.latitude,
-    //   longitude: e.nativeEvent.coordinate.longitude,
-    // });
-  }}
-/>
-
+                  draggable
+                  coordinate={{
+                    latitude: region.latitude,
+                    longitude: region.longitude,
+                  }}
+                  onDragEnd={e => {
+                    setRegion({
+                      ...region,
+                      latitude: e.nativeEvent.coordinate.latitude,
+                      longitude: e.nativeEvent.coordinate.longitude,
+                    });
+                    setDataPusdalop({
+                      ...dataPusdalop,
+                      lat: e.nativeEvent.coordinate.latitude,
+                      lng: e.nativeEvent.coordinate.longitude,
+                    });
+                    // setMapRegion({
+                    //   ...mapRegion,
+                    //   latitude: e.nativeEvent.coordinate.latitude,
+                    //   longitude: e.nativeEvent.coordinate.longitude,
+                    // });
+                  }}
+                />
               </MapView>
               <View
                 style={{
