@@ -26,7 +26,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {createDataPusdalop} from '../../stores/actions/pusdalop';
 import NetInfo from '@react-native-community/netinfo';
-import Geolocation from 'react-native-geolocation-service';
+// import Geolocation from 'react-native-geolocation-service';
+import GetLocation from 'react-native-get-location';
 export default function PusdalopCreate(props) {
   // redux
   const dispatch = useDispatch();
@@ -67,66 +68,61 @@ export default function PusdalopCreate(props) {
   // console.log('INI DATA MAP', region);
   const requestLocationPermission = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Location Permission',
-          message: 'SIMBEBAS MEMBUTUHKAN LOKASI ANDA',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
+      const permission =
+        Platform.OS === 'ios'
+          ? PermissionsIOS.LOCATION_WHEN_IN_USE
+          : PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION;
+
+      const granted = await PermissionsAndroid.request(permission, {
+        title: 'Location Permission',
+        message: 'SIMBEBAS MEMBUTUHKAN LOKASI ANDA',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      });
+
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setLoading(true);
 
         NetInfo.fetch().then(state => {
+          const handleLocation = position => {
+            setRegion({
+              ...region,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+
+            setDataPusdalop({
+              ...dataPusdalop,
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+
+            setLoading(false);
+            console.log('Location Data:', {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          };
+
+          const handleError = error => {
+            console.log(error.code, error.message);
+            // Handle error or use a default location
+            setLoading(false);
+          };
+
+          const locationOptions = {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 10000,
+          };
+
           if (state.isConnected) {
             // Internet connection is available
-            Geolocation.getCurrentPosition(
-              position => {
-                setRegion({
-                  ...region,
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                });
-                setDataPusdalop({
-                  ...dataPusdalop,
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude,
-                });
-                setLoading(false);
-              },
-              error => {
-                console.log(error.code, error.message);
-                // Handle error or use a default location
-                setLoading(false);
-              },
-              {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-            );
+            GetLocation.getCurrentPosition(handleLocation, handleError, locationOptions);
           } else {
             // No internet connection
-            Geolocation.getCurrentPosition(
-              position => {
-                setRegion({
-                  ...region,
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                });
-                setDataPusdalop({
-                  ...dataPusdalop,
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude,
-                });
-                setLoading(false);
-              },
-              error => {
-                console.log(error.code, error.message);
-                // Handle error or use a default location
-                setLoading(false);
-              },
-              {enableHighAccuracy: false, timeout: 15000, maximumAge: 10000},
-            );
+            GetLocation.getCurrentPosition(handleLocation, handleError, locationOptions);
           }
         });
       } else {
@@ -136,33 +132,9 @@ export default function PusdalopCreate(props) {
       console.warn(err);
     }
   };
+
   useEffect(() => {
-    // if (Platform.OS === 'android') {
     requestLocationPermission();
-    // console.log('MAP');
-    // } else {
-    //   Geolocation.getCurrentPosition(
-    //     position => {
-    //       setRegion({
-    //         ...region,
-    //         latitude: position.coords.latitude,
-    //         longitude: position.coords.longitude,
-    //       });
-    //     },
-    //     error => {
-    //       if (error.code === error.PERMISSION_DENIED) {
-    //         alert(
-    //           'Location permission denied. Please enable it in your settings.',
-    //         );
-    //       } else if (error.code === error.POSITION_UNAVAILABLE) {
-    //         alert('Position unavailable. Please try again later.');
-    //       } else {
-    //         alert('An error occurred while retrieving your location.');
-    //       }
-    //     },
-    //     {enableHighAccuracy: true, timeout: 10000},
-    //   );
-    // }
   }, []);
 
   useEffect(() => {

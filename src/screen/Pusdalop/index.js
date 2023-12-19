@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, StyleSheet, Image, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getDataPusdalop} from '../../stores/actions/pusdalop';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
