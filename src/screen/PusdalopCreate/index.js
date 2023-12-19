@@ -39,12 +39,12 @@ export default function PusdalopCreate(props) {
   const [selected, setSelected] = React.useState(0);
   const [date, setDate] = useState(new Date());
   const [kecamatanOption, setKecamatanOption] = useState([]);
+  const [keyKecamatan, setKeyKecamatan] = useState(0);
   const [desaOPtion, setDesaOption] = useState([]);
   const [inputs, setInputs] = useState([{value: '', image: null}]);
   const [images, setImages] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  // console.log('SETDATA', loading);
   const dataJenis = [
     {key: '1', value: 'PENCEGAHAN'},
     {key: '2', value: 'PENANGGULANGAN'},
@@ -132,7 +132,7 @@ export default function PusdalopCreate(props) {
   }, [selected]);
   useEffect(() => {
     axioses
-      .get(`/v1/kecamatan?page=1&perPage=30`)
+      .get(`/v1/kecamatan?page=1&perPage=1000`)
       .then(res => {
         let newArray = res.data.rows.map(item => {
           return {key: item.id, value: item.kecamatan};
@@ -142,18 +142,22 @@ export default function PusdalopCreate(props) {
       .catch(error => console.error(error));
   }, []);
   useEffect(() => {
-    setTimeout(() => {
-      axioses
-        .get(`/v1/desa?page=1&perPage=27`)
-        .then(res => {
-          let newArray = res.data.rows.map(item => {
-            return {key: item.id, value: item.desa};
-          });
-          setDesaOption(newArray);
-        })
-        .catch(error => console.error(error));
-    }, 3000);
-  }, []);
+    if (keyKecamatan !== null) {
+      setTimeout(() => {
+        axioses
+          .get(
+            `/v1/desa?page=1&perPage=1000&kecamatanId=${keyKecamatan.kecamatanId}`,
+          )
+          .then(res => {
+            let newArray = res.data.rows.map(item => {
+              return {key: item.id, value: item.desa};
+            });
+            setDesaOption(newArray);
+          })
+          .catch(error => console.error(error));
+      }, 3000);
+    }
+  }, [keyKecamatan]);
 
   //  NEW FUNCTION MAP
 
@@ -204,6 +208,10 @@ export default function PusdalopCreate(props) {
     setDataPusdalop(prevData => ({
       ...prevData,
       id_kecamatan: key,
+    }));
+    setKeyKecamatan(prevData => ({
+      ...prevData,
+      kecamatanId: key,
     }));
   };
   const handleDesa = key => {
@@ -261,7 +269,6 @@ export default function PusdalopCreate(props) {
             uri: v[k].uri,
           });
         });
-      // console.log('INI DATA CREATE PUSDALOP', formData);
 
       const datauser = await AsyncStorage.getItem('token');
       // const datauser =
@@ -290,7 +297,6 @@ export default function PusdalopCreate(props) {
         },
       });
 
-      // console.log('INIII ERORR', result);
       alert('SUKSES MEMBUAT LAPORAN');
       props.navigation.navigate('Pusdalop');
     } catch (error) {
@@ -311,7 +317,6 @@ export default function PusdalopCreate(props) {
         alert('An unexpected error occurred. Please try again later.');
       }
 
-      console.log('INIII ERORR', error.message);
       if (error.response) {
         console.log('Error response data:', error.response.data);
       }
@@ -736,18 +741,33 @@ export default function PusdalopCreate(props) {
               <Text style={style.titleOption}>Desa</Text>
             </View>
             <View>
-              <SelectList
-                setSelected={handleDesa}
-                data={desaOPtion}
-                save="key"
-                itemKey="key"
-                placeholderTextColor="black"
-                inputStyles={{color: 'black'}}
-                dropdownTextStyles={{color: 'black'}}
-                itemLabel="name"
-                boxStyles={{borderColor: 'black'}}
-                placeholder="Pilih Desa"
-              />
+              {keyKecamatan !== null ? (
+                <SelectList
+                  setSelected={handleDesa}
+                  data={desaOPtion}
+                  save="key"
+                  itemKey="key"
+                  placeholderTextColor="black"
+                  inputStyles={{color: 'black'}}
+                  dropdownTextStyles={{color: 'black'}}
+                  itemLabel="name"
+                  boxStyles={{borderColor: 'black'}}
+                  placeholder="Pilih Desa"
+                />
+              ) : (
+                <SelectList
+                  data={[]} // Pass an empty array or some non-functional data
+                  save="key"
+                  itemKey="key"
+                  placeholderTextColor="gray" // Adjust the color to indicate it's disabled
+                  inputStyles={{color: 'gray'}} // Adjust the color to indicate it's disabled
+                  dropdownTextStyles={{color: 'gray'}} // Adjust the color to indicate it's disabled
+                  itemLabel="name"
+                  boxStyles={{borderColor: 'gray'}} // Adjust the color to indicate it's disabled
+                  placeholder="Anda Harus memilih Kecamatan Dahulu"
+                  enabled={false} // Add a prop to indicate that the SelectList is disabled
+                />
+              )}
             </View>
           </View>
           {/* End Desa */}
