@@ -104,32 +104,25 @@ export default function Pusdalop(props) {
                   onPress={() => navPusdalop(item.id)}
                   underlayColor="#eeeedd">
                   <View style={style.card}>
-                    <View style={{flexDirection: 'row'}}>
-                      <Image
-                        source={
-                          item.risalah[0]?.file
-                            ? {
-                                uri: `${item.risalah[0]?.file}`,
-                              }
-                            : require('../../assets/img/bencana1.png')
-                        }
-                        // source={{uri: `${item.risalah[0]?.file}`}}
-                        style={{width: 100, height: 100}}
-                      />
-                      <View>
-                        <Text style={style.textFlatlist}>{item.nama}</Text>
-                        <Text style={style.textFlatlist}>{item.alamat}</Text>
-                        <Text style={style.textFlatlist}>
-                          {moment(item.tanggal).format('YYYY-MM-DD')}
-                        </Text>
-                        <Text style={style.textFlatlist}>{item.isi_aduan}</Text>
-                      </View>
-                      <View
-                        style={{
-                          paddingLeft: 280,
-                          flexDirection: 'row',
-                          position: 'absolute',
-                        }}></View>
+                    <Image
+                      source={
+                        item.risalah[0]?.file
+                          ? {uri: `${item.risalah[0]?.file}`}
+                          : require('../../assets/img/bencana1.png')
+                      }
+                      style={{width: 100, height: 100, borderRadius: 8}}
+                    />
+                    <View style={style.cardContent}>
+                      <Text style={style.textFlatlistTitle}>{item.nama}</Text>
+                      <Text style={style.textFlatlistSubtitle}>
+                        {item.alamat}
+                      </Text>
+                      <Text style={style.textFlatlistSubtitle}>
+                        {moment(item.tanggal).format('YYYY-MM-DD')}
+                      </Text>
+                      <Text style={style.textFlatlistSubtitle}>
+                        {item.isi_aduan}
+                      </Text>
                     </View>
                   </View>
                 </TouchableHighlight>
@@ -169,25 +162,35 @@ const style = StyleSheet.create({
   },
 
   card: {
+    flexDirection: 'row',
     width: '95%',
-    height: 110,
+    height: 120,
     marginHorizontal: 15,
     marginTop: 20,
-    elevation: 100,
+    elevation: 5,
     shadowColor: 'black',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 12,
-    shadowRadius: 10,
-    marginBottom: 3,
-    zIndex: -1,
-    shadowRadius: 4,
-    // backgroundColor: 'Blue',
-    // borderColor: 'Black',
-    // borderWidth: 1,
-    // borderRadius: 5,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  cardContent: {
+    flex: 1,
+    padding: 10,
+  },
+  textFlatlistTitle: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textFlatlistSubtitle: {
+    color: 'black',
+    fontSize: 14,
   },
   containerFlat: {
     backgroundColor: 'white',
@@ -201,10 +204,10 @@ const style = StyleSheet.create({
     paddingHorizontal: 10,
     fontWeight: 'bold',
   },
-  containerButton: {
-    width: '100%',
-    paddingHorizontal: 10,
-  },
+  // containerButton: {
+  //   width: '100%',
+  //   paddingHorizontal: 10,
+  // },
   buttonLogin: {
     // paddingVertical: 10,
     // paddingHorizontal: 32,

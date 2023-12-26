@@ -57,13 +57,17 @@ export default function PusdalopDetail(props) {
   const [latitudeData, setLatitudeData] = useState('');
   const [longitudeData, setLongitudeData] = useState('');
   const [dataById, setDataByID] = useState({});
+  console.log('INI DATA BENCANA', dataById);
   const dateStr = dataById?.data?.tanggal;
+  // console.log('INI DATA DARI PARSING', dataById.data?.tanggal);
   const formatDate = moment(dateStr).format('YYYY-MM-DD HH:mm:ss');
+  console.log('Date:', date);
+  console.log('Format Date:', formatDate);
   const lat = parseFloat(dataById?.data?.lat);
   const lng = parseFloat(dataById?.data?.lng);
   const defaultLat = -7.43973580004;
   const defaultLng = 109.244402567;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const [dataUpdatePusdalop, setDataUpdatePusdalop] = useState({
     id_jenis_bencana: '',
@@ -166,12 +170,12 @@ export default function PusdalopDetail(props) {
     } catch (error) {
       console.error('Error parsing latitude and longitude values', error);
       // fallback to default location
-      setMapRegion({
-        latitude: DEFAULT_LATITUDE,
-        longitude: DEFAULT_LONGITUDE,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
+      // setMapRegion({
+      //   latitude: DEFAULT_LATITUDE,
+      //   longitude: DEFAULT_LONGITUDE,
+      //   latitudeDelta: 0.01,
+      //   longitudeDelta: 0.01,
+      // });
     }
   }, [dataById]);
   const [mapRegion, setMapRegion] = useState({
@@ -279,8 +283,8 @@ export default function PusdalopDetail(props) {
         setLoading(true);
         const watchId = Geolocation.watchPosition(
           position => {
-            setRegion({
-              ...region,
+            setMapRegion({
+              ...mapRegion,
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
             });
@@ -415,6 +419,7 @@ export default function PusdalopDetail(props) {
               itemKey="key"
               itemLabel="name"
               boxStyles={{borderColor: 'black'}}
+              inputStyles={{color: 'gray'}}
               placeholder={
                 dataById?.data?.tindakan?.jenis_tindakan
                   ? dataById?.data?.tindakan?.jenis_tindakan
@@ -433,6 +438,7 @@ export default function PusdalopDetail(props) {
               dropdownTextStyles={{color: 'black'}}
               itemKey="id"
               itemLabel="name"
+              inputStyles={{color: 'gray'}}
               defaultOption={bencanaOptions}
               boxStyles={{borderColor: 'black'}}
               placeholder={dataById?.data?.subBencana?.sub_jenis}
@@ -442,11 +448,20 @@ export default function PusdalopDetail(props) {
           <View>
             <Text style={style.tittleOption}>Tanggal Kejadian</Text>
             <TextInput
-              value={date}
+              value={formatDate ? formatDate.toString() : ''}
+              placeholderTextColor="gray"
               editable={false}
-              placeholder={formatDate}
-              style={{borderWidth: 1, borderRadius: 10}}
+              placeholder="Select a date"
+              style={{
+                borderWidth: 1,
+                borderRadius: 10,
+                color: 'black',
+                backgroundColor: 'white',
+                // Add explicit styles for placeholder
+                // placeholderTextColor: 'gray',
+              }}
             />
+
             <Pressable style={style.buttonLogin} onPress={() => setOpen(true)}>
               <Text style={style.textLogin}>Pilih Tanggal dan waktu</Text>
             </Pressable>
@@ -471,6 +486,7 @@ export default function PusdalopDetail(props) {
             <Text style={style.tittleOption}>Isi Aduan</Text>
             <TextInput
               placeholder={dataById?.data?.isi_aduan.toString()}
+              placeholderTextColor="gray"
               style={style.inputAduan}
               multiline={true}
               boxStyles={{borderColor: 'black'}}
@@ -534,7 +550,10 @@ export default function PusdalopDetail(props) {
                   }}
                   onPress={() => requestLocationPermission()}>
                   {isLoading ? (
-                    <ActivityIndicator size="large" color="#1a8cff" />
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <ActivityIndicator size="large" />
+                    </View>
                   ) : (
                     <Text
                       style={{
@@ -551,12 +570,15 @@ export default function PusdalopDetail(props) {
               style={{
                 flexDirection: 'row',
                 marginTop: '5%',
-                paddingHorizontal: '25%',
+                // paddingHorizontal: '25%',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
               <TextInput
                 onChangeText={handleLatitudeChange}
-                value={mapRegion.latitude}
+                // value={mapRegion.latitude ? mapRegion.latitude.toString() : ''}
                 placeholder={dataById?.data?.lat}
+                placeholderTextColor="gray"
                 keyboardType="numeric"
                 style={{marginRight: 30}}
               />
@@ -564,8 +586,11 @@ export default function PusdalopDetail(props) {
               <TextInput
                 onChangeText={handleLongitudeChange}
                 keyboardType="numeric"
+                placeholderTextColor="gray"
                 placeholder={dataById?.data?.lng}
-                value={mapRegion.longitude}
+                // value={
+                //   mapRegion.longitude ? mapRegion.longitude.toString() : ''
+                // }
                 style={{marginRight: 10}}
               />
             </View>
@@ -575,19 +600,20 @@ export default function PusdalopDetail(props) {
               <Text style={style.titleEditMar}>Pelapor:</Text>
             </View>
             <View style={style.titleEditMar2}>
-              <Text>Nama</Text>
+              <Text style={{color: 'black'}}>Nama</Text>
             </View>
             <View style={style.titleEditMar}>
-              <Text>No TELP/HP</Text>
+              <Text style={{color: 'black'}}>No TELP/HP</Text>
             </View>
           </View>
           <View style={{flexDirection: 'row'}}>
             <View style={{marginLeft: '20%'}}>
               <TextInput
                 placeholder={dataById?.data?.nama}
+                placeholderTextColor="gray"
                 style={{
                   borderWidth: 1,
-                  borderColor: 'Black',
+                  borderColor: 'black',
                   borderRadius: 10,
                   marginRight: 5,
                   width: 150,
@@ -604,10 +630,11 @@ export default function PusdalopDetail(props) {
             </View>
             <View>
               <TextInput
-                placeholder={dataById?.data?.no_telpon}
+                placeholder={dataById?.data?.no_telpon.toString()}
+                placeholderTextColor="gray"
                 style={{
                   borderWidth: 1,
-                  borderColor: 'Black',
+                  borderColor: 'black',
                   borderRadius: 10,
                   marginRight: 5,
                   width: 150,
@@ -619,7 +646,7 @@ export default function PusdalopDetail(props) {
                   })
                 }
                 // onChangeText={handleChangeNo}
-                value={dataTelp}
+                value={dataTelp ? dataTelp?.toString() : ''}
                 keyboardType="numeric"
               />
             </View>
@@ -635,6 +662,7 @@ export default function PusdalopDetail(props) {
                   dropdownTextStyles={{color: 'black'}}
                   setSelected={handleKecamatan}
                   boxStyles={{borderColor: 'black'}}
+                  inputStyles={{color: 'gray'}}
                   data={kecamatanOption}
                   save="key"
                   itemKey="key"
@@ -655,6 +683,7 @@ export default function PusdalopDetail(props) {
                 dropdownTextStyles={{color: 'black'}}
                 setSelected={handleDesa}
                 boxStyles={{borderColor: 'black'}}
+                inputStyles={{color: 'gray'}}
                 data={desaOPtion}
                 save="key"
                 itemKey="key"
@@ -672,6 +701,7 @@ export default function PusdalopDetail(props) {
             <View>
               <TextInput
                 placeholder={dataById?.data?.alamat}
+                placeholderTextColor="gray"
                 style={{borderWidth: 1, borderColor: 'black', borderRadius: 10}}
                 onChangeText={dataUpdatePusdalop =>
                   handleChangeForm(dataUpdatePusdalop, 'alamat')

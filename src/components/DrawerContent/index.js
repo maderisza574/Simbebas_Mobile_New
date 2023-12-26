@@ -51,7 +51,9 @@ function DrawerContent(props) {
           </View>
           <View style={styles.biodata}>
             <Text style={styles.title}>{name}</Text>
-            <Text style={styles.caption}>{roles}</Text>
+            <View style={styles.rolesContainer}>
+              <Text style={styles.caption}>{roles}</Text>
+            </View>
           </View>
         </View>
         <DrawerItemList {...props} />
@@ -71,6 +73,10 @@ function DrawerContent(props) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  rolesContainer: {
+    maxWidth: 200,
     flex: 1,
   },
   containerProfile: {
