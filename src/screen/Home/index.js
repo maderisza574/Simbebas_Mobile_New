@@ -199,13 +199,28 @@ export default function Home(props) {
                 <ImageSlider
                   data={[
                     {
-                      img: 'https://monitorindonesia.com/wp-content/uploads/2022/05/WhatsApp-Image-2022-05-16-at-16.25.20.jpeg',
+                      img: 'https://static.banyumaskab.go.id/website/images/website_191223021448658142e85625f.jpg',
                     },
                     {
                       img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg8cikBsNwefxO12X8Q3QxwME_YxKu9iRahA&usqp=CAU',
                     },
                     {
                       img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGHmFWobSfzJNBV_NL2Gb0wKxbfwtabxy1mg&usqp=CAU',
+                    },
+                    {
+                      img: 'https://static.banyumaskab.go.id/website/images/website_19122301400765813ac7abad3.jpg',
+                    },
+                    {
+                      img: 'https://static.banyumaskab.go.id/website/images/website_191223013306658139220fa31.jpg',
+                    },
+                    {
+                      img: 'https://static.banyumaskab.go.id/website/images/website_19122301242165813715595a4.jpg',
+                    },
+                    {
+                      img: 'https://static.banyumaskab.go.id/website/images/website_06122301441665701840d67bf.jpg',
+                    },
+                    {
+                      img: 'https://static.banyumaskab.go.id/website/images/website_061223013838657016ee601bc.jpg',
                     },
                   ]}
                   autoPlay={true}
