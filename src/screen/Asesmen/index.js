@@ -63,7 +63,7 @@ export default function Asesmen(props) {
           />
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Text style={{color: 'white'}}>Data Lapor Bencana</Text>
-            <Text style={{color: 'white'}}>(ASESMEN)</Text>
+            <Text style={{color: 'white'}}>(ASSESMEN)</Text>
           </View>
         </View>
       </View>
@@ -73,6 +73,17 @@ export default function Asesmen(props) {
         </View>
         <View style={style.containerFlat}>
           <FlatList
+            style={{
+              marginBottom: '5%',
+              elevation: 10,
+              shadowColor: '#0000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.5,
+              shadowRadius: 10,
+            }}
             data={pusdalop}
             refreshing={refreshing}
             onRefresh={handleRefresh}
@@ -99,22 +110,36 @@ export default function Asesmen(props) {
                       }
                       style={{width: 100, height: 100}}
                     />
-                    <View>
-                      <Text style={style.textFlatlist}>{item.nama}</Text>
-                      <Text style={style.textFlatlist}>{item.alamat}</Text>
-                      <Text style={style.textFlatlist}>
+                    <View style={style.cardContent}>
+                      <Text style={style.textFlatlistTitle}>{item.nama}</Text>
+                      <Text style={style.textFlatlistSubtitle}>
+                        {item.alamat}
+                      </Text>
+                      <Text style={style.textFlatlistSubtitle}>
                         {moment(item.tanggal).format('YYYY-MM-DD')}
                       </Text>
-                      <Text style={style.textFlatlist}>{item.isi_aduan}</Text>
+                      <Text style={style.textFlatlistSubtitle}>
+                        {item.isi_aduan}
+                      </Text>
                     </View>
-                    <View style={{}}>
+                    <View style={{maxWidth: '40%'}}>
                       <View style={{marginLeft: '20%'}}>
                         {item.lock_verif === false ? (
-                          <Text style={{color: 'red', marginLeft: '3%'}}>
+                          <Text
+                            style={{
+                              color: 'red',
+                              paddingHorizontal: '5%',
+                              paddingVertical: '40%',
+                            }}>
                             Assesmen
                           </Text>
                         ) : (
-                          <Text style={{color: 'green', marginLeft: '3%'}}>
+                          <Text
+                            style={{
+                              color: 'green',
+                              paddingHorizontal: '5%',
+                              paddingVertical: '40%',
+                            }}>
                             Assesmen
                           </Text>
                         )}
@@ -133,16 +158,16 @@ export default function Asesmen(props) {
 }
 
 const style = StyleSheet.create({
+  titleScreen: {
+    backgroundColor: '#FF6A16',
+    color: 'white',
+    height: 100,
+  },
   textFlatlist: {
     color: 'black',
     marginLeft: '5%',
     marginBottom: '3%',
     marginTop: '2%',
-  },
-  titleScreen: {
-    backgroundColor: '#FF6A16',
-    color: 'white',
-    height: 100,
   },
   containerInput: {
     backgroundColor: '#f5f5f0',
@@ -156,6 +181,39 @@ const style = StyleSheet.create({
     position: 'relative',
     marginTop: -10,
   },
+
+  card: {
+    flexDirection: 'row',
+    width: '95%',
+    height: 120,
+    marginHorizontal: 15,
+    marginTop: 20,
+    elevation: 5,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  cardContent: {
+    // flex: 1,
+    maxWidth: '43%',
+    padding: 10,
+  },
+  textFlatlistTitle: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textFlatlistSubtitle: {
+    color: 'black',
+    fontSize: 14,
+  },
   containerFlat: {
     backgroundColor: 'white',
     borderRadius: 8,
@@ -163,52 +221,36 @@ const style = StyleSheet.create({
     marginVertical: 8,
     // Set shadow radius
   },
-  buttonLogin: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 7,
-    elevation: 3,
-    backgroundColor: '#ff471a',
-    width: '30%',
-    textAlign: 'center',
-    height: 50,
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  textLogin: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: 'bold',
-    letterSpacing: 0.25,
-    color: 'white',
-  },
-  card: {
-    width: '95%',
-    height: 110,
-    marginHorizontal: 15,
-    marginTop: 20,
-    elevation: 100,
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 12,
-    shadowRadius: 10,
-    marginBottom: 3,
-    zIndex: -1,
-    shadowRadius: 4,
-    // backgroundColor: 'Blue',
-    // borderColor: 'Black',
-    // borderWidth: 1,
-    // borderRadius: 5,
-  },
   texttitle: {
     color: 'black',
     paddingHorizontal: 10,
-    paddingVertical: 10,
     fontWeight: 'bold',
+  },
+  // containerButton: {
+  //   width: '100%',
+  //   paddingHorizontal: 10,
+  // },
+  buttonLogin: {
+    // paddingVertical: 10,
+    // paddingHorizontal: 32,
+    borderRadius: 7,
+    backgroundColor: '#ff471a',
+    width: '41%',
+    textAlign: 'center',
+    height: '50%',
+    marginTop: 10,
+  },
+  textLogin: {
+    // fontSize: 16,
+    // lineHeight: 21,
+    fontWeight: 'bold',
+    // letterSpacing: 0.25,
+    color: 'white',
+  },
+  containerButton: {
+    width: '100%',
+    height: '10%',
+    position: 'relative',
+    // backgroundColor: 'red',
   },
 });

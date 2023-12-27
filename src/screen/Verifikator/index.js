@@ -109,6 +109,17 @@ export default function Verifikator(props) {
         {/* </View> */}
         <View style={style.containerFlat}>
           <FlatList
+            style={{
+              marginBottom: '5%',
+              elevation: 10,
+              shadowColor: '#0000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.5,
+              shadowRadius: 10,
+            }}
             data={dataVerif}
             refreshing={refreshing}
             onRefresh={handleRefresh}
@@ -124,20 +135,32 @@ export default function Verifikator(props) {
                 underlayColor="#eeeedd">
                 <View style={style.card}>
                   <View style={{flexDirection: 'row'}}>
-                    <View>
-                      <Text style={style.textFlatlist}>{item.nama}</Text>
-                      <Text style={style.textFlatlist}>{item.alamat}</Text>
-                      <Text style={style.textFlatlist}>
+                    <View style={style.cardContent}>
+                      <Text style={style.textFlatlistTitle}>{item.nama}</Text>
+                      <Text style={style.textFlatlistSubtitle}>
+                        {item.alamat}
+                      </Text>
+                      <Text style={style.textFlatlistSubtitle}>
                         {moment(item.tanggal).format('YYYY-MM-DD')}
                       </Text>
                     </View>
-                    <View style={{marginLeft: '40%'}}>
+                    <View style={{marginLeft: '20%'}}>
                       {item.lock_gudang === false ? (
-                        <Text style={{color: 'red', marginLeft: '7%'}}>
+                        <Text
+                          style={{
+                            color: 'red',
+                            paddingHorizontal: '5%',
+                            paddingVertical: '40%',
+                          }}>
                           Verifikasi
                         </Text>
                       ) : (
-                        <Text style={{color: 'green', marginLeft: '7%'}}>
+                        <Text
+                          style={{
+                            color: 'green',
+                            paddingHorizontal: '5%',
+                            paddingVertical: '10%',
+                          }}>
                           Verifikasi
                         </Text>
                       )}
@@ -166,7 +189,7 @@ const style = StyleSheet.create({
     marginTop: '2%',
   },
   containerInput: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f5f5f0',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderRadius: 30,
@@ -179,25 +202,36 @@ const style = StyleSheet.create({
   },
 
   card: {
+    flexDirection: 'row',
     width: '95%',
-    height: 110,
+    height: 120,
     marginHorizontal: 15,
     marginTop: 20,
-    elevation: 100,
+    elevation: 5,
     shadowColor: 'black',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 12,
-    shadowRadius: 10,
-    marginBottom: 3,
-    zIndex: -1,
-    shadowRadius: 4,
-    // backgroundColor: 'Blue',
-    // borderColor: 'Black',
-    // borderWidth: 1,
-    // borderRadius: 5,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  cardContent: {
+    // flex: 1,
+    maxWidth: '50%',
+    padding: 10,
+  },
+  textFlatlistTitle: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textFlatlistSubtitle: {
+    color: 'black',
+    fontSize: 14,
   },
   containerFlat: {
     backgroundColor: 'white',
@@ -206,14 +240,18 @@ const style = StyleSheet.create({
     marginVertical: 8,
     // Set shadow radius
   },
-  // texttitle: {
-  //   color: 'black',
+  texttitle: {
+    color: 'black',
+    paddingHorizontal: 10,
+    fontWeight: 'bold',
+  },
+  // containerButton: {
+  //   width: '100%',
   //   paddingHorizontal: 10,
-  //   // paddingVertical: 10,
   // },
   buttonLogin: {
-    paddingVertical: 10,
-    paddingHorizontal: 32,
+    // paddingVertical: 10,
+    // paddingHorizontal: 32,
     borderRadius: 7,
     backgroundColor: '#ff471a',
     width: '41%',
@@ -222,15 +260,16 @@ const style = StyleSheet.create({
     marginTop: 10,
   },
   textLogin: {
-    fontSize: 16,
-    lineHeight: 21,
+    // fontSize: 16,
+    // lineHeight: 21,
     fontWeight: 'bold',
-    letterSpacing: 0.25,
+    // letterSpacing: 0.25,
     color: 'white',
   },
   containerButton: {
     width: '100%',
-    height: '3%',
+    height: '10%',
     position: 'relative',
+    // backgroundColor: 'red',
   },
 });
