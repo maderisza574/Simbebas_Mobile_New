@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import axios from '../../utils/axios';
+import axioses from '../../utils/axios';
+import axios from 'axios';
 import Icon from 'react-native-vector-icons/AntDesign';
 import DatePicker from 'react-native-date-picker';
 import MapView from 'react-native-maps';
@@ -33,6 +34,7 @@ export default function AsesmenDetail(props) {
   const [namaBarang, setnamaBarang] = useState('');
   const [dataById, setDataByID] = useState({});
   const pusdalopid = props.route.params.pusdalopId;
+  console.log('INI DATA PusdalopID', pusdalopid);
   const lat = parseFloat(dataById?.data?.lat);
   const lng = parseFloat(dataById?.data?.lng);
   const defaultLat = -7.43973580004;
@@ -51,7 +53,7 @@ export default function AsesmenDetail(props) {
           Authorization: 'Bearer ' + datauser,
         },
       };
-      const result = await axios.get(`/v1/pusdalops/${pusdalopid}`, config);
+      const result = await axioses.get(`/v1/pusdalops/${pusdalopid}`, config);
       setDataByID(result.data);
       // setMapRegion({
       //   ...mapRegion,
@@ -67,7 +69,7 @@ export default function AsesmenDetail(props) {
     handlegetPusdalopId();
   }, []);
   useEffect(() => {
-    axios
+    axioses
       .get(`/v1/barang?page=1&perPage=5`)
       .then(res => {
         let newArray = res.data.rows.map(item => {
@@ -149,7 +151,11 @@ export default function AsesmenDetail(props) {
       type: photo.assets[0].type,
       uri: photo.assets[0].uri,
     });
-    setImage(photo.assets[0].uri);
+    setImages(photo.assets[0].uri);
+    setDataAsesemen({
+      ...dataAssesmen,
+      image: [...dataAssesmen.image, photo.assets[0].uri],
+    });
   };
   const [dataAssesmen, setDataAsesemen] = useState({
     rumahrusak_rr: '',
@@ -175,7 +181,31 @@ export default function AsesmenDetail(props) {
     id_barang: [],
     qty: [],
     image: images,
+    // rumahrusak_rr: 'test',
+    // rumahrusak_rs: 'test',
+    // rumahrusak_rb: 'test',
+    // potensi_susulan: 'test',
+    // petugas: 'test',
+    // kerugianrp: 'test',
+    // korban_jiwa: 'test',
+    // waktu_assesment: '2023-03-12',
+    // unsur_terlibat: 'test',
+    // kebutuhan_mendesak: 'test',
+    // cakupan: 'test',
+    // deskripsi_kronologis: 'test',
+    // peralatan_dibutuhkan: 'test',
+    // tindakan: 'test',
+    // luka_berat: 'test',
+    // luka_sedang: 'test',
+    // luka_ringan: 'test',
+    // dampak: 'test',
+    // kerusakan_fasum: 'test',
+    // keteranganImage: [],
+    // id_barang: [],
+    // qty: [],
+    // image: images,
   });
+  // console.log('INI DATA ASSEMEN LUAR', dataAssesmen);
 
   const handleChangeForm = (value, name) => {
     setDataAsesemen({...dataAssesmen, [name]: value});
@@ -217,7 +247,7 @@ export default function AsesmenDetail(props) {
       formData.append('keteranganImage[0]', dataAssesmen.keteranganImage);
       formData.append('barang[0][qty]', dataAssesmen.qty);
       formData.append('barang[0][id_barang]', dataAssesmen.id_barang);
-      // formData.append('', dataAssesmen.);
+
       images.length > 0 &&
         images.forEach((v, k) => {
           formData.append(`Image[${k}]`, {
@@ -228,7 +258,7 @@ export default function AsesmenDetail(props) {
         });
       const datauser = await AsyncStorage.getItem('token');
       console.log('INI DATA ASESMENT DALAM', formData);
-
+      console.log('INI pusdalop id', pusdalopid);
       const result = await axios({
         method: 'PATCH',
         url: `https://apisimbebas.banyumaskab.go.id/api/v1/assesment/${pusdalopid}`,
@@ -238,12 +268,15 @@ export default function AsesmenDetail(props) {
           Authorization: `Bearer ${datauser}`,
         },
       });
-
       console.log(result);
       alert('SUKSES MEMBUAT ASSESMEN');
       props.navigation.navigate('Asesmen');
     } catch (error) {
       console.log(error);
+      console.log('Error Response:', error.response.data);
+      console.log('Error Headers:', error.response.headers);
+      console.log('Error Config:', error.config);
+      alert('Failed to create assessment. See console for details.');
     }
   };
 

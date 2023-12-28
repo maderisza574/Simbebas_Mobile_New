@@ -92,12 +92,12 @@ export default function Asesmen(props) {
             renderItem={({item}) => (
               <TouchableHighlight
                 onPress={() => {
-                  if (!item.lock_verif) {
+                  if (!item.lock) {
                     navAsesmenDetail(item.id);
                   }
                 }}
                 underlayColor="#eeeedd"
-                disabled={item.lock_verif}>
+                disabled={item.lock}>
                 <View style={style.card}>
                   <View style={{flexDirection: 'row'}}>
                     <Image
@@ -124,7 +124,7 @@ export default function Asesmen(props) {
                     </View>
                     <View style={{maxWidth: '40%'}}>
                       <View style={{marginLeft: '20%'}}>
-                        {item.lock_verif === false ? (
+                        {item.lock === false ? (
                           <Text
                             style={{
                               color: 'red',

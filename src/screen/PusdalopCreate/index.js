@@ -392,7 +392,7 @@ export default function PusdalopCreate(props) {
       maxWidth: 100,
     });
     if (photo) {
-      setFormData({
+      setDataPusdalop({
         ...dataPusdalop,
         images: [...dataPusdalop.images, ...photo.assets],
       });
