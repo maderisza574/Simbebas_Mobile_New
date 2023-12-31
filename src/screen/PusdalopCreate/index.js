@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   InteractionManager,
   Alert,
+  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import {SelectList} from 'react-native-dropdown-select-list';
@@ -44,6 +45,7 @@ export default function PusdalopCreate(props) {
   const [desaOPtion, setDesaOption] = useState([]);
   const [inputs, setInputs] = useState([{value: '', image: null}]);
   const [images, setImages] = useState([]);
+  console.log('INI DATA IMAGE LIB', images);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const dataJenis = [
@@ -225,6 +227,25 @@ export default function PusdalopCreate(props) {
   };
 
   // END DROPDWON
+  const [dataPusdalop, setDataPusdalop] = useState({
+    id_jenis_bencana: '', // initialize with empty string
+    id_tindakan: '',
+    user_pemohon: '3276027010860007',
+    isi_aduan: '',
+    no_telepon: '',
+    nama: '',
+    alamat: '',
+    id_desa: '',
+    id_kecamatan: '',
+    lng: '',
+    lat: '',
+    tindakan_trc: 'false',
+    logpal: 'false',
+    tanggal: date,
+    image: images,
+    keteranganImage: [],
+  });
+  console.log('INI DATA ID BENCANA', dataPusdalop.id_jenis_bencana);
 
   const handleCreatePusdalop = async () => {
     try {
@@ -263,20 +284,35 @@ export default function PusdalopCreate(props) {
       // formData.append('logpal', 'true');
       // formData.append('tanggal', '2023-03-12');
       // formData.append('keteranganImage[0]', 'tes');
+      console.log('Image Data:', images.flat());
 
       images.length > 0 &&
-        images.forEach((v, k) => {
-          formData.append(`image[0]`, {
-            name: v[k].fileName,
-            type: v[k].type,
-            uri: v[k].uri,
-          });
+        images.flat().forEach((image, index) => {
+          console.log(`Processing Image ${index}:`, image);
+          if (image.uri) {
+            console.log(`Appending Image ${index} to FormData:`, {
+              uri: image.uri,
+              type: image.type || 'image/jpeg',
+              name: image.name || 'image.jpg',
+            });
+
+            formData.append(`image[${index}]`, {
+              uri: image.uri,
+              type: image.type || 'image/jpeg',
+              name: image.name || 'image.jpg',
+            });
+          }
         });
+
+      if (images.length === 0) {
+        alert('Please select at least one image.');
+        return; // Prevent the request if no images are selected
+      }
 
       const datauser = await AsyncStorage.getItem('token');
       // const datauser =
       //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxNjksImlhdCI6MTY3OTg5NTU1NSwiZXhwIjoxNjc5OTgxOTU1fQ.Llc9rtKMa9y6rIijgeWva1mlGl1V5J5Wnoc8I-Ron1Q';
-
+      console.log('INI LOG DALAM', formData._parts);
       const result = await axios({
         url: 'https://apisimbebas.banyumaskab.go.id/api/v1/pusdalops',
         method: 'POST',
@@ -286,6 +322,7 @@ export default function PusdalopCreate(props) {
           Authorization: `Bearer ${datauser}`,
         },
       });
+
       const notifData = {
         title: 'Ada Data Terbaru  Pusdalop',
         body: 'Mohon periksa dan verifikasi',
@@ -324,11 +361,11 @@ export default function PusdalopCreate(props) {
         console.log('Error response data:', error.response.data);
       }
       console.log('INIII ERORR', error.message);
-      alert('SESI ANDA SUDAH BERAKHIR');
-      await AsyncStorage.clear();
-      props.navigation.replace('AuthScreen', {
-        screen: 'Login',
-      });
+      // alert('SESI ANDA SUDAH BERAKHIR');
+      // await AsyncStorage.clear();
+      // props.navigation.replace('AuthScreen', {
+      //   screen: 'Login',
+      // });
     }
   };
 
@@ -368,10 +405,10 @@ export default function PusdalopCreate(props) {
                   name: response.assets[0].fileName,
                 },
               ];
-              setImages(prevImages => [...prevImages, response.assets]);
+              setImages(prevImages => [source, ...prevImages]);
               setDataPusdalop({
                 ...dataPusdalop,
-                image: [...dataPusdalop.image, response.assets],
+                image: [source, ...dataPusdalop.image],
               });
             } else {
               console.log('No image selected');
@@ -391,14 +428,23 @@ export default function PusdalopCreate(props) {
       mediaType: 'photo',
       maxWidth: 100,
     });
-    if (photo) {
+
+    if (photo && photo.assets && photo.assets.length > 0) {
+      const source = {
+        uri: photo.assets[0].uri,
+        type: photo.assets[0].type,
+        name: photo.assets[0].fileName,
+      };
+
+      // Prepend the new image to the array
+      setImages(prevImages => [source, ...prevImages]);
+
+      // Update other state if needed
       setDataPusdalop({
         ...dataPusdalop,
-        images: [...dataPusdalop.images, ...photo.assets],
+        image: [source, ...dataPusdalop.image],
       });
     }
-    // console.log('INI IMAGE LIBRARY', formData._parts[0]);
-    // setImages(photo.assets[0].uri);
   };
 
   const [stateMap, setStateMap] = useState({
@@ -428,24 +474,6 @@ export default function PusdalopCreate(props) {
     setDataPusdalop({...dataPusdalop, [name]: value});
   };
 
-  const [dataPusdalop, setDataPusdalop] = useState({
-    id_jenis_bencana: '', // initialize with empty string
-    id_tindakan: '',
-    user_pemohon: '3276027010860007',
-    isi_aduan: '',
-    no_telepon: '',
-    nama: '',
-    alamat: '',
-    id_desa: '',
-    id_kecamatan: '',
-    lng: '',
-    lat: '',
-    tindakan_trc: 'false',
-    logpal: 'false',
-    tanggal: date,
-    image: images,
-    keteranganImage: [],
-  });
   // console.log('INI DATA PUSDALOP', dataPusdalop);
 
   return (
@@ -810,15 +838,19 @@ export default function PusdalopCreate(props) {
             {inputs.map((input, index) => (
               <View key={index}>
                 <View style={{flexDirection: 'row', padding: 10}}>
-                  <View style={{marginRight: '30%'}}>
-                    {images && images[0] && images[0][0]?.uri && (
-                      <Image
-                        source={{
-                          uri: images[0][0].uri,
-                        }}
-                        style={{height: 200, width: 200}}
-                      />
-                    )}
+                  <View>
+                    {images &&
+                      images.flat().map((image, index) => (
+                        <View key={index} style={{marginBottom: 10}}>
+                          <Image
+                            source={{
+                              uri: image.uri,
+                            }}
+                            style={{height: 200, width: 200}}
+                          />
+                          {/* Other image-related UI or controls */}
+                        </View>
+                      ))}
                   </View>
                 </View>
                 <View
