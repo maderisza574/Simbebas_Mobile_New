@@ -65,13 +65,11 @@ export default function Signin(props) {
       await AsyncStorage.setItem('firebaseToken', firebaseToken);
       // Assuming the props object is being passed as a parameter to the function
       props.navigation.replace('AppScreen', {screen: 'MenuNavigator'});
-
-      console.log('INI DATA RESULT', result);
-      alert('sukses');
+      alert('Berhasil Masuk');
     } catch (error) {
-      console.log(error);
-      alert('gagal');
       setIsLoading(false);
+      alert('Mohon Cek Kembali Username dan Password');
+      console.log(error?.message);
     }
   };
   return (

@@ -903,19 +903,9 @@ export default function PusdalopCreate(props) {
                     }
                   />
                   {/* ))} */}
-                  <Button
-                    title="Remove"
-                    // onPress={() => handleRemoveInput(index)}
-                    onPress={() => alert('FITUR INI BELUM TERSEDIA')}
-                  />
                 </View>
               </View>
             ))}
-            <Button
-              title="Tambahkan Beberapa Gambar"
-              // onPress={handleAddInput}
-              onPress={() => alert('FITUR INI BELUM TERSEDIA')}
-            />
           </View>
           {/* end input loop image */}
           <View style={{marginTop: 10}}>

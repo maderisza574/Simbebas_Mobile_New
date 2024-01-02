@@ -120,20 +120,24 @@ export default function PenangananView(props) {
                         // source={{uri: `${item.risalah[0]?.file}`}}
                         style={{width: 100, height: 100}}
                       />
-                      <View>
-                        <Text style={style.textFlatlist}>{item.nama}</Text>
-                        <Text style={style.textFlatlist}>{item.alamat}</Text>
-                        <Text style={style.textFlatlist}>
+                      <View style={style.cardContent}>
+                        <Text style={style.textFlatlistTitle}>{item.nama}</Text>
+                        <Text style={style.textFlatlistSubtitle}>
+                          {item.alamat}
+                        </Text>
+                        <Text style={style.textFlatlistSubtitle}>
                           {moment(item.tanggal).format('YYYY-MM-DD')}
                         </Text>
-                        <Text style={style.textFlatlist}>{item.isi_aduan}</Text>
+                        <Text style={style.textFlatlistSubtitle}>
+                          {item.isi_aduan}
+                        </Text>
                       </View>
-                      <View
+                      {/* <View
                         style={{
                           paddingLeft: 280,
                           flexDirection: 'row',
                           position: 'absolute',
-                        }}></View>
+                        }}></View> */}
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -153,11 +157,24 @@ const style = StyleSheet.create({
     color: 'white',
     height: 100,
   },
+  cardContent: {
+    flex: 1,
+    padding: 10,
+  },
   textFlatlist: {
     color: 'black',
     marginLeft: '5%',
     marginBottom: '3%',
     marginTop: '2%',
+  },
+  textFlatlistTitle: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textFlatlistSubtitle: {
+    color: 'black',
+    fontSize: 14,
   },
   containerInput: {
     backgroundColor: '#f5f5f0',
