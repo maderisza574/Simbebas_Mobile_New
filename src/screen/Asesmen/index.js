@@ -108,7 +108,7 @@ export default function Asesmen(props) {
                             }
                           : require('../../assets/img/bencana1.png')
                       }
-                      style={{width: 100, height: 100}}
+                      style={{width: 100, height: 170}}
                     />
                     <View style={style.cardContent}>
                       <Text style={style.textFlatlistTitle}>{item.nama}</Text>
@@ -118,11 +118,22 @@ export default function Asesmen(props) {
                       <Text style={style.textFlatlistSubtitle}>
                         {moment(item.tanggal).format('YYYY-MM-DD')}
                       </Text>
-                      <Text style={style.textFlatlistSubtitle}>
-                        {item.isi_aduan}
-                      </Text>
+                      <View
+                        style={{
+                          alignContent: 'center',
+                          alignItems: 'center',
+                          paddingTop: '5%',
+                        }}>
+                        <Pressable
+                          style={style.buttonLihat}
+                          onPress={() => navAsesmenDetail(item.id)}>
+                          <View style={{alignItems: 'center'}}>
+                            <Text style={style.textLihat}>Lihat</Text>
+                          </View>
+                        </Pressable>
+                      </View>
                     </View>
-                    <View style={{maxWidth: '40%'}}>
+                    {/* <View>
                       <View style={{marginLeft: '20%'}}>
                         {item.lock === false ? (
                           <Text
@@ -144,6 +155,17 @@ export default function Asesmen(props) {
                           </Text>
                         )}
                       </View>
+                    </View> */}
+                    <View style={{marginLeft: '28%'}}>
+                      {item.lock === false ? (
+                        <View style={{backgroundColor: 'red', height: 500}}>
+                          <Text style={{color: 'red'}}>TES</Text>
+                        </View>
+                      ) : (
+                        <View style={{backgroundColor: 'green', height: 500}}>
+                          <Text style={{color: 'green'}}>TES</Text>
+                        </View>
+                      )}
                     </View>
                   </View>
                 </View>
@@ -181,11 +203,23 @@ const style = StyleSheet.create({
     position: 'relative',
     marginTop: -10,
   },
-
+  buttonLihat: {
+    backgroundColor: '#ff471a',
+    width: 100,
+    height: 30,
+    justifyContent: 'center',
+  },
+  textLihat: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },
   card: {
     flexDirection: 'row',
     width: '95%',
-    height: 120,
+    height: 170,
     marginHorizontal: 15,
     marginTop: 20,
     elevation: 5,
@@ -199,10 +233,11 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 8,
     overflow: 'hidden',
+    maxHeight: 200,
   },
   cardContent: {
-    // flex: 1,
-    maxWidth: '43%',
+    flex: 1,
+    minWidth: '50%',
     padding: 10,
   },
   textFlatlistTitle: {

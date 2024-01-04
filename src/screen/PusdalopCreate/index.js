@@ -21,6 +21,7 @@ import {SelectList} from 'react-native-dropdown-select-list';
 import DatePicker from 'react-native-date-picker';
 import MapView, {Marker} from 'react-native-maps';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 import axioses from '../../utils/axios';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,11 +42,9 @@ export default function PusdalopCreate(props) {
   const [date, setDate] = useState(new Date());
   const [kecamatanOption, setKecamatanOption] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(0);
-  console.log('INI KEY KECAMATAN', keyKecamatan);
   const [desaOPtion, setDesaOption] = useState([]);
   const [inputs, setInputs] = useState([{value: '', image: null}]);
   const [images, setImages] = useState([]);
-  console.log('INI DATA IMAGE LIB', images);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const dataJenis = [
@@ -348,9 +347,7 @@ export default function PusdalopCreate(props) {
           );
         } else {
           // Handle other Axios errors
-          alert(
-            'An error occurred while sending the report. Please try again.',
-          );
+          alert(error.response.data.message);
         }
       } else {
         // Handle non-Axios errors
@@ -382,6 +379,7 @@ export default function PusdalopCreate(props) {
           buttonPositive: 'OK',
         },
       );
+
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         launchCamera(
           {
@@ -390,26 +388,37 @@ export default function PusdalopCreate(props) {
             maxHeight: 200,
             maxWidth: 200,
           },
-          response => {
+          async response => {
             if (response.didCancel) {
               console.log('User cancelled image picker');
-            }
-            if (response.errorCode) {
+            } else if (response.errorCode) {
               console.log('ImagePicker Error: ', response.errorMessage);
-            }
-            if (response.assets && response.assets.length > 0) {
-              const source = [
-                {
+            } else if (response.assets && response.assets.length > 0) {
+              const originalImagePath = response.assets[0].uri;
+              console.log('INI IMAGE ORI', originalImagePath);
+
+              try {
+                const compressedImage = ImageResizer.createResizedImage(
+                  response.assets[0].uri,
+                  200, // New width
+                  200, // New height
+                  'JPEG', // Format
+                  80, // Quality (0 to 100)
+                );
+                const source = {
                   uri: response.assets[0].uri,
                   type: response.assets[0].type,
                   name: response.assets[0].fileName,
-                },
-              ];
-              setImages(prevImages => [source, ...prevImages]);
-              setDataPusdalop({
-                ...dataPusdalop,
-                image: [source, ...dataPusdalop.image],
-              });
+                };
+
+                setImages(prevImages => [source, ...prevImages]);
+                setDataPusdalop({
+                  ...dataPusdalop,
+                  image: [source, ...dataPusdalop.image],
+                });
+              } catch (error) {
+                console.log('Image compression error:', error);
+              }
             } else {
               console.log('No image selected');
             }
@@ -424,26 +433,44 @@ export default function PusdalopCreate(props) {
   };
   console.log();
   const handleLaunchImageLibrary = async () => {
-    const photo = await launchImageLibrary({
-      mediaType: 'photo',
-      maxWidth: 100,
-    });
-
-    if (photo && photo.assets && photo.assets.length > 0) {
-      const source = {
-        uri: photo.assets[0].uri,
-        type: photo.assets[0].type,
-        name: photo.assets[0].fileName,
-      };
-
-      // Prepend the new image to the array
-      setImages(prevImages => [source, ...prevImages]);
-
-      // Update other state if needed
-      setDataPusdalop({
-        ...dataPusdalop,
-        image: [source, ...dataPusdalop.image],
+    try {
+      const photo = await launchImageLibrary({
+        mediaType: 'photo',
+        maxWidth: 100,
       });
+
+      if (photo && photo.assets && photo.assets.length > 0) {
+        const originalImagePath = photo.assets[0].uri;
+
+        try {
+          const compressedImage = await ImageResizer.createResizedImage(
+            originalImagePath,
+            100, // New width
+            100, // New height
+            'JPEG', // Format
+            80, // Quality (0 to 100)
+          );
+
+          const source = {
+            uri: compressedImage.uri,
+            type: photo.assets[0].type,
+            name: photo.assets[0].fileName,
+          };
+
+          // Prepend the new compressed image to the array
+          setImages(prevImages => [source, ...prevImages]);
+
+          // Update other state if needed
+          setDataPusdalop({
+            ...dataPusdalop,
+            image: [source, ...dataPusdalop.image],
+          });
+        } catch (error) {
+          console.log('Image compression error:', error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

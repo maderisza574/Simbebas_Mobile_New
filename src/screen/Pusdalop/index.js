@@ -1,11 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, StyleSheet, Image, Pressable} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Image,
+  Pressable,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getDataPusdalop} from '../../stores/actions/pusdalop';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import {TouchableHighlight} from 'react-native-gesture-handler';
+import {Button} from 'react-native-paper';
 
 export default function Pusdalop(props) {
   const [refreshing, setRefreshing] = useState(false);
@@ -110,7 +119,7 @@ export default function Pusdalop(props) {
                           ? {uri: `${item.risalah[0]?.file}`}
                           : require('../../assets/img/bencana1.png')
                       }
-                      style={{width: 100, height: 100, borderRadius: 8}}
+                      style={{width: 100, height: 170, borderRadius: 8}}
                     />
                     <View style={style.cardContent}>
                       <Text style={style.textFlatlistTitle}>{item.nama}</Text>
@@ -123,6 +132,23 @@ export default function Pusdalop(props) {
                       <Text style={style.textFlatlistSubtitle}>
                         {item.isi_aduan}
                       </Text>
+                      <View
+                        style={{
+                          alignContent: 'center',
+                          alignItems: 'center',
+                          paddingTop: '5%',
+                        }}>
+                        <Pressable
+                          style={style.buttonLihat}
+                          onPress={() => navPusdalop(item.id)}>
+                          <View style={{alignItems: 'center'}}>
+                            <Text style={style.textLihat}>Lihat</Text>
+                          </View>
+                        </Pressable>
+                      </View>
+                    </View>
+                    <View style={{backgroundColor: 'green'}}>
+                      <Text style={{color: 'green'}}>TES</Text>
                     </View>
                   </View>
                 </TouchableHighlight>
@@ -148,6 +174,19 @@ const style = StyleSheet.create({
     marginBottom: '3%',
     marginTop: '2%',
   },
+  buttonLihat: {
+    backgroundColor: '#ff471a',
+    width: 100,
+    height: 30,
+    justifyContent: 'center',
+  },
+  textLihat: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },
   containerInput: {
     backgroundColor: '#f5f5f0',
     borderTopLeftRadius: 15,
@@ -164,7 +203,7 @@ const style = StyleSheet.create({
   card: {
     flexDirection: 'row',
     width: '95%',
-    height: 120,
+    height: 170,
     marginHorizontal: 15,
     marginTop: 20,
     elevation: 5,
@@ -182,6 +221,7 @@ const style = StyleSheet.create({
   cardContent: {
     flex: 1,
     padding: 10,
+    maxHeight: 200,
   },
   textFlatlistTitle: {
     color: 'black',

@@ -18,6 +18,7 @@ import MapView from 'react-native-maps';
 import {Marker} from 'react-native-maps';
 import {SelectList} from 'react-native-dropdown-select-list';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 import {getDataPusdalopById} from '../../stores/actions/pusdalop';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,7 +35,7 @@ export default function AsesmenDetail(props) {
   const [namaBarang, setnamaBarang] = useState('');
   const [dataById, setDataByID] = useState({});
   const pusdalopid = props.route.params.pusdalopId;
-  console.log('INI DATA PusdalopID', pusdalopid);
+  console.log('INI DATA PusdalopID', dataById);
   const lat = parseFloat(dataById?.data?.lat);
   const lng = parseFloat(dataById?.data?.lng);
   const defaultLat = -7.43973580004;
@@ -89,6 +90,7 @@ export default function AsesmenDetail(props) {
 
   // Image
   const [images, setImages] = useState([]);
+  console.log('INI DATA IMages', images);
   const handleLaunchCamera = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -124,10 +126,10 @@ export default function AsesmenDetail(props) {
                   name: response.assets[0].fileName,
                 },
               ];
-              setImages(prevImages => [...prevImages, response.assets]);
+              setImages(prevImages => [source, ...prevImages]);
               setDataAsesemen({
                 ...dataAssesmen,
-                image: [...dataAssesmen.image, response.assets],
+                image: [source, ...dataAssesmen.image],
               });
               // setImage({...image, image: source});
             }
@@ -141,21 +143,45 @@ export default function AsesmenDetail(props) {
     }
   };
   const handleLaunchImageLibrary = async () => {
-    const photo = await launchImageLibrary({
-      mediaType: 'photo',
-      maxWidth: 100,
-    });
-    const formData = new FormData();
-    formData.append('image', {
-      name: photo.assets[0].fileName,
-      type: photo.assets[0].type,
-      uri: photo.assets[0].uri,
-    });
-    setImages(photo.assets[0].uri);
-    setDataAsesemen({
-      ...dataAssesmen,
-      image: [...dataAssesmen.image, photo.assets[0].uri],
-    });
+    try {
+      const photo = await launchImageLibrary({
+        mediaType: 'photo',
+        maxWidth: 100,
+      });
+
+      if (photo && photo.assets && photo.assets.length > 0) {
+        const originalImagePath = photo.assets[0].uri;
+
+        try {
+          const compressedImage = await ImageResizer.createResizedImage(
+            originalImagePath,
+            100, // New width
+            100, // New height
+            'JPEG', // Format
+            80, // Quality (0 to 100)
+          );
+
+          const source = {
+            uri: compressedImage.uri,
+            type: photo.assets[0].type,
+            name: photo.assets[0].fileName,
+          };
+
+          // Prepend the new compressed image to the array
+          setImages(prevImages => [source, ...prevImages]);
+
+          // Update other state if needed
+          setDataAsesemen({
+            ...dataAssesmen,
+            image: [source, ...dataAssesmen.image],
+          });
+        } catch (error) {
+          console.log('Image compression error:', error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   const [dataAssesmen, setDataAsesemen] = useState({
     rumahrusak_rr: '',
@@ -803,29 +829,24 @@ export default function AsesmenDetail(props) {
           </View>
           <View style={{marginTop: 10}}>
             <Text style={style.textTitleInput}>File Gambar</Text>
+
             <View style={{flexDirection: 'row', padding: 10}}>
-              <View style={{marginRight: 60}}>
-                <Text style={style.textAsesmen}>Preview Image</Text>
-                {/* {dataAssesmen.image[0]?.uri && (
-                  <Image
-                    source={{
-                      uri: dataAssesmen.image[0]
-                        ? dataAssesmen.image[0]?.uri
-                        : null,
-                    }}
-                    style={{height: 200, width: 200}}
-                  />
-                )} */}
-                {images && images[0] && images[0][0]?.uri && (
-                  <Image
-                    source={{
-                      uri: images[0][0].uri,
-                    }}
-                    style={{height: 200, width: 200}}
-                  />
-                )}
+              <View>
+                {images &&
+                  images.flat().map((image, index) => (
+                    <View key={index} style={{marginBottom: 10}}>
+                      <Image
+                        source={{
+                          uri: image.uri,
+                        }}
+                        style={{height: 200, width: 200}}
+                      />
+                      {/* Other image-related UI or controls */}
+                    </View>
+                  ))}
               </View>
             </View>
+
             <View
               style={{
                 marginBottom: 10,

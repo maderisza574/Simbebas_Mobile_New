@@ -295,6 +295,7 @@ const style = StyleSheet.create({
   grupButton: {
     flexDirection: 'row',
     paddingHorizontal: '5%',
+    alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: '20%',
   },

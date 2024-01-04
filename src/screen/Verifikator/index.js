@@ -143,8 +143,22 @@ export default function Verifikator(props) {
                       <Text style={style.textFlatlistSubtitle}>
                         {moment(item.tanggal).format('YYYY-MM-DD')}
                       </Text>
+                      <View
+                        style={{
+                          alignContent: 'center',
+                          alignItems: 'center',
+                          paddingTop: '5%',
+                        }}>
+                        <Pressable
+                          style={style.buttonLihat}
+                          onPress={() => navVerifDetail(item.id)}>
+                          <View style={{alignItems: 'center'}}>
+                            <Text style={style.textLihat}>Lihat</Text>
+                          </View>
+                        </Pressable>
+                      </View>
                     </View>
-                    <View style={{marginLeft: '20%'}}>
+                    {/* <View style={{marginLeft: '20%'}}>
                       {item.lock_gudang === false ? (
                         <Text
                           style={{
@@ -163,6 +177,17 @@ export default function Verifikator(props) {
                           }}>
                           Verifikasi
                         </Text>
+                      )}
+                    </View> */}
+                    <View style={{marginLeft: '28%'}}>
+                      {item.lock === false ? (
+                        <View style={{backgroundColor: 'red', height: 500}}>
+                          <Text style={{color: 'red'}}>TES</Text>
+                        </View>
+                      ) : (
+                        <View style={{backgroundColor: 'green', height: 500}}>
+                          <Text style={{color: 'green'}}>TES</Text>
+                        </View>
                       )}
                     </View>
                   </View>
@@ -188,6 +213,19 @@ const style = StyleSheet.create({
     marginBottom: '3%',
     marginTop: '2%',
   },
+  buttonLihat: {
+    backgroundColor: '#ff471a',
+    width: 100,
+    height: 30,
+    justifyContent: 'center',
+  },
+  textLihat: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },
   containerInput: {
     backgroundColor: '#f5f5f0',
     borderTopLeftRadius: 15,
@@ -204,7 +242,7 @@ const style = StyleSheet.create({
   card: {
     flexDirection: 'row',
     width: '95%',
-    height: 120,
+    height: 170,
     marginHorizontal: 15,
     marginTop: 20,
     elevation: 5,
@@ -220,8 +258,8 @@ const style = StyleSheet.create({
     overflow: 'hidden',
   },
   cardContent: {
-    // flex: 1,
-    maxWidth: '50%',
+    flex: 1,
+    minWidth: '83%',
     padding: 10,
   },
   textFlatlistTitle: {

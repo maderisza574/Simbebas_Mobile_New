@@ -118,7 +118,7 @@ export default function PenangananView(props) {
                             : require('../../assets/img/bencana1.png')
                         }
                         // source={{uri: `${item.risalah[0]?.file}`}}
-                        style={{width: 100, height: 100}}
+                        style={{width: 100, height: 170}}
                       />
                       <View style={style.cardContent}>
                         <Text style={style.textFlatlistTitle}>{item.nama}</Text>
@@ -131,6 +131,9 @@ export default function PenangananView(props) {
                         <Text style={style.textFlatlistSubtitle}>
                           {item.isi_aduan}
                         </Text>
+                      </View>
+                      <View style={{backgroundColor: 'green'}}>
+                        <Text style={{color: 'green'}}>TES</Text>
                       </View>
                       {/* <View
                         style={{
@@ -191,20 +194,22 @@ const style = StyleSheet.create({
 
   card: {
     width: '95%',
-    height: 110,
+    height: 170,
     marginHorizontal: 15,
     marginTop: 20,
-    elevation: 100,
+    elevation: 5,
     shadowColor: 'black',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 12,
+    backgroundColor: 'white',
+    borderRadius: 8,
     shadowRadius: 10,
     marginBottom: 3,
-    zIndex: -1,
-    shadowRadius: 4,
+    overflow: 'hidden',
+
     // backgroundColor: 'Blue',
     // borderColor: 'Black',
     // borderWidth: 1,
