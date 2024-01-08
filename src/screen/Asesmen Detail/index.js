@@ -275,13 +275,27 @@ export default function AsesmenDetail(props) {
       formData.append('barang[0][id_barang]', dataAssesmen.id_barang);
 
       images.length > 0 &&
-        images.forEach((v, k) => {
-          formData.append(`Image[${k}]`, {
-            name: v[k].fileName,
-            type: v[k].type,
-            uri: v[k].uri,
-          });
+        images.flat().forEach((image, index) => {
+          console.log(`Processing Image ${index}:`, image);
+          if (image.uri) {
+            console.log(`Appending Image ${index} to FormData:`, {
+              uri: image.uri,
+              type: image.type || 'image/jpeg',
+              name: image.name || 'image.jpg',
+            });
+
+            formData.append(`Image[${index}]`, {
+              uri: image.uri,
+              type: image.type || 'image/jpeg',
+              name: image.name || 'image.jpg',
+            });
+          }
         });
+
+      if (images.length === 0) {
+        alert('Please select at least one image.');
+        return; // Prevent the request if no images are selected
+      }
       const datauser = await AsyncStorage.getItem('token');
       console.log('INI DATA ASESMENT DALAM', formData);
       console.log('INI pusdalop id', pusdalopid);

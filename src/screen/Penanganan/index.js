@@ -58,7 +58,7 @@ export default function Penanganan(props) {
 
       const dataToSend = {
         user: String(user),
-        id_pusdalops: parseInt(pusdalopid),
+        id_pusdalops: pusdalopid ,
       };
 
       console.log('INI DATA KIRIM', dataToSend);

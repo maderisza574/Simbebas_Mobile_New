@@ -14,8 +14,10 @@ import {
 import Icon from 'react-native-vector-icons/Entypo';
 import {SelectList} from 'react-native-dropdown-select-list';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 import MapView, {Marker} from 'react-native-maps';
 import axios from '../../utils/axios';
+import axioses from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import {Chip} from 'react-native-paper';
@@ -121,6 +123,7 @@ export default function VerifikatorDetail(props) {
           buttonPositive: 'OK',
         },
       );
+
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         launchCamera(
           {
@@ -129,26 +132,37 @@ export default function VerifikatorDetail(props) {
             maxHeight: 200,
             maxWidth: 200,
           },
-          response => {
+          async response => {
             if (response.didCancel) {
               console.log('User cancelled image picker');
-            }
-            if (response.errorCode) {
+            } else if (response.errorCode) {
               console.log('ImagePicker Error: ', response.errorMessage);
-            }
-            if (response.assets && response.assets.length > 0) {
-              const source = [
-                {
+            } else if (response.assets && response.assets.length > 0) {
+              const originalImagePath = response.assets[0].uri;
+              console.log('INI IMAGE ORI', originalImagePath);
+
+              try {
+                const compressedImage = ImageResizer.createResizedImage(
+                  response.assets[0].uri,
+                  200, // New width
+                  200, // New height
+                  'JPEG', // Format
+                  80, // Quality (0 to 100)
+                );
+                const source = {
                   uri: response.assets[0].uri,
                   type: response.assets[0].type,
                   name: response.assets[0].fileName,
-                },
-              ];
-              setImages(prevImages => [...prevImages, response.assets]);
-              setDataVerifikator({
-                ...dataVerifikator,
-                image: [...dataVerifikator.image, response.assets],
-              });
+                };
+
+                setImages(prevImages => [source, ...prevImages]);
+                setDataVerifikator({
+                  ...dataVerifikator,
+                  image: [source, ...dataVerifikator.image],
+                });
+              } catch (error) {
+                console.log('Image compression error:', error);
+              }
             } else {
               console.log('No image selected');
             }
@@ -162,18 +176,45 @@ export default function VerifikatorDetail(props) {
     }
   };
   const handleLaunchImageLibrary = async () => {
-    const photo = await launchImageLibrary({
-      mediaType: 'photo',
-      maxWidth: 100,
-    });
-    if (photo) {
-      // setFormData({
-      //   ...dataPusdalop,
-      //   images: [...dataPusdalop.images, ...photo.assets],
-      // });
+    try {
+      const photo = await launchImageLibrary({
+        mediaType: 'photo',
+        maxWidth: 100,
+      });
+
+      if (photo && photo.assets && photo.assets.length > 0) {
+        const originalImagePath = photo.assets[0].uri;
+
+        try {
+          const compressedImage = await ImageResizer.createResizedImage(
+            originalImagePath,
+            100, // New width
+            100, // New height
+            'JPEG', // Format
+            80, // Quality (0 to 100)
+          );
+
+          const source = {
+            uri: compressedImage.uri,
+            type: photo.assets[0].type,
+            name: photo.assets[0].fileName,
+          };
+
+          // Prepend the new compressed image to the array
+          setImages(prevImages => [source, ...prevImages]);
+
+          // Update other state if needed
+          setDataVerifikator({
+            ...dataVerifikator,
+            image: [source, ...dataVerifikator.image],
+          });
+        } catch (error) {
+          console.log('Image compression error:', error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
-    // console.log('INI IMAGE LIBRARY', formData._parts[0]);
-    // setImages(photo.assets[0].uri);
   };
   const [dataVerifikator, setDataVerifikator] = useState({
     tindakan_trc: false,
@@ -206,8 +247,8 @@ export default function VerifikatorDetail(props) {
       formData.append('alat_berat', true);
       formData.append('dinas', true);
       formData.append('rekomendasi', 'tidak ada');
-      formData.append('barang[0][id_barang]', 1);
-      formData.append('barang[0][qty]', 1);
+      formData.append('barang[0][id_barang]', '1');
+      formData.append('barang[0][qty]', '1');
       formData.append('keteranganImage[0]', 'tess');
       //       tindakan_trc:true
       // langsung:true
@@ -220,16 +261,30 @@ export default function VerifikatorDetail(props) {
       // keteranganImage[0]:tesss
 
       images.length > 0 &&
-        images.forEach((v, k) => {
-          formData.append(`Image[${k}]`, {
-            name: v[k].fileName,
-            type: v[k].type,
-            uri: v[k].uri,
-          });
+        images.flat().forEach((image, index) => {
+          console.log(`Processing Image ${index}:`, image);
+          if (image.uri) {
+            console.log(`Appending Image ${index} to FormData:`, {
+              uri: image.uri,
+              type: image.type || 'image/jpeg',
+              name: image.name || 'image.jpg',
+            });
+
+            formData.append(`image[${index}]`, {
+              uri: image.uri,
+              type: image.type || 'image/jpeg',
+              name: image.name || 'image.jpg',
+            });
+          }
         });
+
+      if (images.length === 0) {
+        alert('Please select at least one image.');
+        return; // Prevent the request if no images are selected
+      }
       const datauser = await AsyncStorage.getItem('token');
       console.log('INI DATA ASESMENT DALAM', formData);
-      const result = await axios({
+      const result = await axioses({
         method: 'PATCH',
         url: `https://apisimbebas.banyumaskab.go.id/api/v1/verifikasi/${pusdalopid}`,
         data: formData,
@@ -242,7 +297,8 @@ export default function VerifikatorDetail(props) {
       console.log('INI DATA VERIF', result);
       alert('SUKSES MEBUAT VERIFIKASI');
     } catch (error) {
-      alert(error);
+      alert(error.message);
+      console.log(error);
     }
   };
   const handleTindakanTRCPress = () => {
@@ -302,13 +358,27 @@ export default function VerifikatorDetail(props) {
             <Text style={{color: 'white'}}>Verifikator</Text>
             <Text style={{color: 'white'}}>(Verifikator Detail)</Text>
           </View>
-          <View style={style.containerInput}>
-            <Text style={{color: 'black'}}>Perbaiki Isian Data Bencana</Text>
+          <View
+            style={{
+              ...style.containerInput,
+              // marginBottom: '30%', // Adding marginBottom for extra space at the bottom
+            }}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingTop: 5,
+              }}>
+              <Text style={style.titleSilahkan}>
+                Perbaiki Isian Data Bencana
+              </Text>
+            </View>
             <View
               style={{
                 marginBottom: 10,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                marginTop: -10,
               }}>
               <View>
                 <Text>Jenis Bencana:</Text>
@@ -353,10 +423,10 @@ export default function VerifikatorDetail(props) {
                   style={{
                     flex: 1,
                     height: 200,
-                    width: 400,
-                    position: 'absolute',
-                    zIndex: 999999,
-                    marginLeft: '0.5%',
+                    width: '100%',
+                    // position: 'absolute',
+                    // zIndex: 999999,
+                    paddingVertical: '5%',
                   }}>
                   <Marker
                     draggable
@@ -377,7 +447,7 @@ export default function VerifikatorDetail(props) {
             </View>
             <View
               style={{
-                marginTop: '50%',
+                // marginTop: '50%',
                 marginBottom: 10,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -613,15 +683,19 @@ export default function VerifikatorDetail(props) {
             <View>
               <View>
                 <View style={{flexDirection: 'row', padding: 10}}>
-                  <View style={{marginRight: '30%'}}>
-                    {images && images[0] && images[0][0]?.uri && (
-                      <Image
-                        source={{
-                          uri: images[0][0].uri,
-                        }}
-                        style={{height: 200, width: 200}}
-                      />
-                    )}
+                  <View>
+                    {images &&
+                      images.flat().map((image, index) => (
+                        <View key={index} style={{marginBottom: 10}}>
+                          <Image
+                            source={{
+                              uri: image.uri,
+                            }}
+                            style={{height: 200, width: 200}}
+                          />
+                          {/* Other image-related UI or controls */}
+                        </View>
+                      ))}
                   </View>
                 </View>
                 <View
@@ -633,7 +707,11 @@ export default function VerifikatorDetail(props) {
                   <TouchableOpacity
                     style={{marginRight: 10, width: 60}}
                     onPress={handleLaunchCamera}>
-                    <Icon name="camera" size={20} style={{marginLeft: 10}} />
+                    <Icon
+                      name="camera"
+                      size={20}
+                      style={{marginLeft: 10, color: 'black'}}
+                    />
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{marginRight: 10, width: 60}}
@@ -641,22 +719,21 @@ export default function VerifikatorDetail(props) {
                     <Icon
                       name="folder-images"
                       size={20}
-                      style={{marginLeft: 10}}
+                      style={{marginLeft: 10, color: 'black'}}
                     />
                   </TouchableOpacity>
                 </View>
                 <View>
                   <Text style={{color: 'black'}}>Keterangan</Text>
                   <TextInput
-                    placeholder="Masukan Keterangan gambar"
+                    placeholder="Masukan Keterangan "
                     placeholderTextColor="black"
                     style={{
-                      height: 100,
-                      width: 350,
+                      width: '100%',
                       borderWidth: 1,
-                      marginLeft: 15,
-                      marginTop: 5,
-                      marginBottom: 10,
+                      marginTop: '1%',
+                      borderRadius: 10,
+                      borderColor: 'black',
                       color: 'black',
                     }}
                     onChangeText={text =>
@@ -667,17 +744,17 @@ export default function VerifikatorDetail(props) {
                     }
                   />
                 </View>
-                <View>
+                <View style={{marginBottom: '10%'}}>
                   <Text style={{color: 'black'}}>Rekomendasi</Text>
                   <TextInput
                     placeholder="Masukan Rekomendasi"
                     style={{
-                      height: 100,
-                      width: 350,
+                      width: '100%',
                       borderWidth: 1,
-                      marginLeft: 15,
-                      marginTop: 5,
-                      marginBottom: 10,
+                      marginTop: '1%',
+                      borderRadius: 10,
+                      borderColor: 'black',
+                      color: 'black',
                     }}
                     placeholderTextColor="black"
                     onChangeText={dataVerifikator =>
@@ -687,123 +764,139 @@ export default function VerifikatorDetail(props) {
                 </View>
               </View>
             </View>
-            <View style={{flexDirection: 'row', width: '100%', height: '15%'}}>
-              <View style={{width: '40%', height: '15%'}}>
-                <Chip
-                  styicon="information"
-                  onPress={handleTindakanTRCPress}
-                  style={style.styleChip}>
-                  <View>
-                    <Icon name="hand" size={20} selectionColor />
-                  </View>
-                  <View>
-                    <Text>Tindakan TRC</Text>
-                  </View>
-                </Chip>
-              </View>
-              <View style={{width: '60%', height: '15%'}}>
-                <Chip
-                  styicon="information"
-                  onPress={handlePemberianPress}
-                  // onPress={() => console.log('Pressed')}
-                  style={style.chipLangsung}>
-                  <View>
-                    <Icon name="archive" size={20} selectionColor />
-                  </View>
-                  <View>
-                    <Text>Pemberian Langsung</Text>
-                  </View>
-                </Chip>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                width: '100%',
-                height: '15%',
-                marginTop: '-50%',
-              }}>
-              <View style={{width: '48%', height: '15%'}}>
-                <Chip
-                  styicon="information"
-                  onPress={handleKontruksiPress}
-                  // onPress={() => console.log('Pressed')}
-                  style={style.styleChip}>
-                  <View>
-                    <Icon name="new" size={20} selectionColor />
-                  </View>
-                  <View>
-                    <Text>Penangan Kontruksi</Text>
-                  </View>
-                </Chip>
-              </View>
-              <View style={{marginLeft: '3%'}}>
-                <View style={{width: '100%', height: '15%'}}>
+            {/* INI GRUP BUTTON */}
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  // height: '15%',
+                  marginTop: '5%',
+                }}>
+                <View style={{width: '40%', height: '15%'}}>
                   <Chip
                     styicon="information"
-                    onPress={handleAlatPress}
-                    // onPress={() => console.log('Pressed')}
+                    onPress={handleTindakanTRCPress}
                     style={style.styleChip}>
                     <View>
-                      <Icon name="traffic-cone" size={20} selectionColor />
+                      <Icon name="hand" size={20} selectionColor />
                     </View>
                     <View>
-                      <Text>Alat Berat</Text>
+                      <Text>Tindakan TRC</Text>
+                    </View>
+                  </Chip>
+                </View>
+                <View style={{width: '60%', height: '15%'}}>
+                  <Chip
+                    styicon="information"
+                    onPress={handlePemberianPress}
+                    // onPress={() => console.log('Pressed')}
+                    style={style.chipLangsung}>
+                    <View>
+                      <Icon name="archive" size={20} selectionColor />
+                    </View>
+                    <View>
+                      <Text>Pemberian Langsung</Text>
                     </View>
                   </Chip>
                 </View>
               </View>
-            </View>
-            <View style={{marginTop: '-50%'}}>
-              <View style={{width: '50%', height: '15%'}}>
-                <Chip
-                  styicon="information"
-                  onPress={handleDinasPress}
-                  // onPress={() => console.log('Pressed')}
-                  style={style.styleChip}>
-                  <View>
-                    <Icon name="users" size={20} selectionColor />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  // width: '100%',
+                  // height: '15%',
+                  paddingVertical: '5%',
+                  // backgroundColor: 'red',
+                }}>
+                <View style={{width: '48%', height: '15%'}}>
+                  <Chip
+                    styicon="information"
+                    onPress={handleKontruksiPress}
+                    // onPress={() => console.log('Pressed')}
+                    style={style.styleChip}>
+                    <View>
+                      <Icon name="new" size={20} selectionColor />
+                    </View>
+                    <View>
+                      <Text>Penangan Kontruksi</Text>
+                    </View>
+                  </Chip>
+                </View>
+                <View>
+                  <View style={{width: '100%'}}>
+                    <Chip
+                      styicon="information"
+                      onPress={handleAlatPress}
+                      // onPress={() => console.log('Pressed')}
+                      style={style.styleChip}>
+                      <View>
+                        <Icon name="traffic-cone" size={20} selectionColor />
+                      </View>
+                      <View>
+                        <Text>Alat Berat</Text>
+                      </View>
+                    </Chip>
                   </View>
-                  <View>
-                    <Text>Ditangani Dinas Lain</Text>
-                  </View>
-                </Chip>
+                </View>
+              </View>
+              <View>
+                <View style={{width: '50%'}}>
+                  <Chip
+                    styicon="information"
+                    onPress={handleDinasPress}
+                    // onPress={() => console.log('Pressed')}
+                    style={style.styleChip}>
+                    <View>
+                      <Icon name="users" size={20} selectionColor />
+                    </View>
+                    <View>
+                      <Text>Ditangani Dinas Lain</Text>
+                    </View>
+                  </Chip>
+                </View>
+              </View>
+              <View style={{paddingVertical: '5%'}}>
+                <View style={{paddingVertical: '5%'}}>
+                  <Pressable
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: '#1a8cff',
+                      height: 35,
+                    }}
+                    onPress={handleCreateVerifikator}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                      }}>
+                      Verifikasi & Simpan
+                    </Text>
+                  </Pressable>
+                </View>
+                <View>
+                  <Pressable
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: '#ff0000',
+                      height: 35,
+                    }}
+                    onPress={navVerifikator}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                      }}>
+                      Batal
+                    </Text>
+                  </Pressable>
+                </View>
               </View>
             </View>
-            <View
-              style={{
-                width: '100%',
-                backgroundColor: '#1a75ff',
-                height: '3%',
-                borderRadius: 5,
-                marginTop: '-48%',
-              }}>
-              <Pressable
-                style={{justifyContent: 'center', alignItems: 'center'}}
-                onPress={handleCreateVerifikator}>
-                <Text
-                  style={{color: 'white', fontWeight: 'bold', marginTop: '2%'}}>
-                  Verifikasi & Simpan
-                </Text>
-              </Pressable>
-            </View>
-            <View
-              style={{
-                width: '100%',
-                backgroundColor: '#ff1a1a',
-                height: '3%',
-                borderRadius: 5,
-                marginTop: '5%',
-              }}>
-              <Pressable
-                style={{justifyContent: 'center', alignItems: 'center'}}
-                onPress={navVerifikator}>
-                <Text
-                  style={{color: 'white', fontWeight: 'bold', marginTop: '2%'}}>
-                  Batal
-                </Text>
-              </Pressable>
-            </View>
+            {/* END GRUP BUTTOn */}
           </View>
         </View>
       </ScrollView>
@@ -815,19 +908,25 @@ const style = StyleSheet.create({
   titleScreen: {
     backgroundColor: '#FF6A16',
     color: 'white',
-    height: 1700,
+    minHeight: 100,
+  },
+  titleSilahkan: {
+    color: 'black',
+    // marginBottom: '5%',
+    fontSize: 16,
+    // justifyContent: 'center',
   },
   containerInput: {
     backgroundColor: '#ffffff',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    borderRadius: 30,
     padding: 6,
     width: '100%',
-    height: '100%',
+    // minHeight: 1000, // Remove or set to a reasonable value
     position: 'relative',
     marginTop: -20,
   },
+
   buttonLogin: {
     alignItems: 'center',
     justifyContent: 'center',

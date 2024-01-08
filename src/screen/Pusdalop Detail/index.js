@@ -46,8 +46,8 @@ export default function PusdalopDetail(props) {
   const [latitude, setlatitude] = useState('');
   const [longitude, setlongiude] = useState();
   const [kecamatanOption, setKecamatanOption] = useState([]);
-  const [keykecamatan, setkeyKecamatan] = useState(0);
-  const [desaOPtion, setDesaOption] = useState([]);
+  const [keyKecamatan, setkeyKecamatan] = useState(0);
+  const [desaOption, setDesaOption] = useState([]);
   const [keyDesa, setKeyDesa] = useState(0);
   const [dataAlamat, setDataAlamat] = useState('');
   const [dataTelp, setdataTelp] = useState(0);
@@ -57,10 +57,10 @@ export default function PusdalopDetail(props) {
   const [latitudeData, setLatitudeData] = useState('');
   const [longitudeData, setLongitudeData] = useState('');
   const [dataById, setDataByID] = useState({});
-  console.log('INI DATA BENCANA', dataById);
-  const dateStr = dataById?.data?.tanggal;
-  // console.log('INI DATA DARI PARSING', dataById.data?.tanggal);
-  const formatDate = moment(dateStr).format('YYYY-MM-DD HH:mm:ss');
+  console.log('INI DATA PUSDALOP', dataById);
+  const formatDate = moment(dataById?.data?.tanggal || new Date()).format(
+    'YYYY-MM-DD HH:mm:ss',
+  );
   console.log('Date:', date);
   console.log('Format Date:', formatDate);
   const lat = parseFloat(dataById?.data?.lat);
@@ -85,11 +85,12 @@ export default function PusdalopDetail(props) {
     logpal: false,
     tanggal: date.toISOString().slice(0, 10),
   });
-  // console.log('INI DATA UPDATE', dataUpdatePusdalop);
+  console.log('INI DATA UPDATE', dataUpdatePusdalop);
 
   const handleChangeNama = text => {
     setDataNama(text);
   };
+
   const handleChangeIsi = text => {
     setIsiAduan(text);
   };
@@ -127,18 +128,24 @@ export default function PusdalopDetail(props) {
       });
   }, []);
   useEffect(() => {
-    setTimeout(() => {
-      axios
-        .get('/v1/desa?page=1&perPage=27')
-        .then(res => {
-          let newArray = res.data.rows.map(item => {
-            return {key: item.id, value: item.desa};
-          });
-          setDesaOption(newArray);
-        })
-        .catch(error => console.error(error));
-    }, 3000);
-  }, []);
+    if (keyKecamatan !== null) {
+      setTimeout(() => {
+        axios
+          .get(
+            `/v1/desa?page=1&perPage=1000&kecamatanId=${
+              keyKecamatan.kecamatanId || 0
+            }`,
+          )
+          .then(res => {
+            let newArray = res.data.rows.map(item => {
+              return {key: item.id, value: item.desa};
+            });
+            setDesaOption(newArray);
+          })
+          .catch(error => console.error(error));
+      }, 3000);
+    }
+  }, [keyKecamatan]);
   const handlegetPusdalopId = async () => {
     try {
       const datauser = await AsyncStorage.getItem('token');
@@ -235,6 +242,10 @@ export default function PusdalopDetail(props) {
     setDataUpdatePusdalop(prevData => ({
       ...prevData,
       id_kecamatan: key,
+    }));
+    setkeyKecamatan(prevData => ({
+      ...prevData,
+      kecamatanId: key,
     }));
   };
   const handleDesa = key => {
@@ -380,7 +391,7 @@ export default function PusdalopDetail(props) {
       props.navigation.navigate('Pusdalop');
     } catch (error) {
       console.log(error);
-      alert('GAGAL UPDATE');
+      alert('Mohon Isi Kembali Data');
       props.navigation.navigate('Pusdalop');
     }
   };
@@ -616,6 +627,7 @@ export default function PusdalopDetail(props) {
                   borderColor: 'black',
                   borderRadius: 10,
                   marginRight: 5,
+                  color: 'black',
                   width: 150,
                 }}
                 // onChangeText={handleChangeNama}
@@ -630,13 +642,18 @@ export default function PusdalopDetail(props) {
             </View>
             <View>
               <TextInput
-                placeholder={dataById?.data?.no_telpon.toString()}
+                placeholder={
+                  dataById?.data?.no_telpon
+                    ? dataById?.data?.no_telpon.toString()
+                    : 'Tidak Ada'
+                }
                 placeholderTextColor="gray"
                 style={{
                   borderWidth: 1,
                   borderColor: 'black',
                   borderRadius: 10,
                   marginRight: 5,
+                  color: 'black',
                   width: 150,
                 }}
                 onChangeText={text =>
@@ -646,7 +663,7 @@ export default function PusdalopDetail(props) {
                   })
                 }
                 // onChangeText={handleChangeNo}
-                value={dataTelp ? dataTelp?.toString() : ''}
+                value={dataUpdatePusdalop.no_telepon}
                 keyboardType="numeric"
               />
             </View>
@@ -684,7 +701,7 @@ export default function PusdalopDetail(props) {
                 setSelected={handleDesa}
                 boxStyles={{borderColor: 'black'}}
                 inputStyles={{color: 'gray'}}
-                data={desaOPtion}
+                data={desaOption}
                 save="key"
                 itemKey="key"
                 itemLabel="name"
@@ -702,7 +719,12 @@ export default function PusdalopDetail(props) {
               <TextInput
                 placeholder={dataById?.data?.alamat}
                 placeholderTextColor="gray"
-                style={{borderWidth: 1, borderColor: 'black', borderRadius: 10}}
+                style={{
+                  borderWidth: 1,
+                  borderColor: 'black',
+                  borderRadius: 10,
+                  color: 'black',
+                }}
                 onChangeText={dataUpdatePusdalop =>
                   handleChangeForm(dataUpdatePusdalop, 'alamat')
                 }
@@ -735,6 +757,7 @@ const style = StyleSheet.create({
     marginTop: 5,
     borderRadius: 10,
     borderColor: 'black',
+    color: 'black',
   },
   titleScreen: {
     backgroundColor: '#FF6A16',
