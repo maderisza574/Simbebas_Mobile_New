@@ -119,7 +119,7 @@ export default function Pusdalop(props) {
                           ? {uri: `${item.risalah[0]?.file}`}
                           : require('../../assets/img/bencana1.png')
                       }
-                      style={{width: 100, height: 170, borderRadius: 8}}
+                      style={{width: 100, height: 185, borderRadius: 8}}
                     />
                     <View style={style.cardContent}>
                       <Text style={style.textFlatlistTitle}>{item.nama}</Text>
@@ -129,7 +129,10 @@ export default function Pusdalop(props) {
                       <Text style={style.textFlatlistSubtitle}>
                         {moment(item.tanggal).format('YYYY-MM-DD')}
                       </Text>
-                      <Text style={style.textFlatlistSubtitle}>
+                      <Text
+                        style={style.textFlatlistSubtitle}
+                        numberOfLines={2}
+                        ellipsizeMode="tail">
                         {item.isi_aduan}
                       </Text>
                       <View
@@ -147,8 +150,18 @@ export default function Pusdalop(props) {
                         </Pressable>
                       </View>
                     </View>
-                    <View style={{backgroundColor: 'green'}}>
-                      <Text style={{color: 'green'}}>TES</Text>
+                    <View>
+                      {item.lock === false ? (
+                        <View
+                          style={{backgroundColor: 'red', height: 500}}
+                          onPress={() => navPusdalop(item.id)}>
+                          <Text style={{color: 'red'}}>TES</Text>
+                        </View>
+                      ) : (
+                        <View style={{backgroundColor: 'green', height: 500}}>
+                          <Text style={{color: 'green'}}>TES</Text>
+                        </View>
+                      )}
                     </View>
                   </View>
                 </TouchableHighlight>
@@ -203,7 +216,7 @@ const style = StyleSheet.create({
   card: {
     flexDirection: 'row',
     width: '95%',
-    height: 170,
+    height: 185,
     marginHorizontal: 15,
     marginTop: 20,
     elevation: 5,
@@ -221,7 +234,7 @@ const style = StyleSheet.create({
   cardContent: {
     flex: 1,
     padding: 10,
-    maxHeight: 200,
+    maxHeight: 250,
   },
   textFlatlistTitle: {
     color: 'black',

@@ -108,7 +108,7 @@ export default function Asesmen(props) {
                             }
                           : require('../../assets/img/bencana1.png')
                       }
-                      style={{width: 100, height: 170}}
+                      style={{width: 100, height: 185, borderRadius: 8}}
                     />
                     <View style={style.cardContent}>
                       <Text style={style.textFlatlistTitle}>{item.nama}</Text>
@@ -157,7 +157,7 @@ export default function Asesmen(props) {
                       </View>
                     </View> */}
                     <View style={{marginLeft: '28%'}}>
-                      {item.lock === false ? (
+                      {item.lock_verif === false ? (
                         <View style={{backgroundColor: 'red', height: 500}}>
                           <Text style={{color: 'red'}}>TES</Text>
                         </View>
@@ -219,7 +219,7 @@ const style = StyleSheet.create({
   card: {
     flexDirection: 'row',
     width: '95%',
-    height: 170,
+    height: 185,
     marginHorizontal: 15,
     marginTop: 20,
     elevation: 5,

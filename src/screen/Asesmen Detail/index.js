@@ -293,7 +293,7 @@ export default function AsesmenDetail(props) {
         });
 
       if (images.length === 0) {
-        alert('Please select at least one image.');
+        alert('Mohon Upload Gambar');
         return; // Prevent the request if no images are selected
       }
       const datauser = await AsyncStorage.getItem('token');
@@ -309,14 +309,14 @@ export default function AsesmenDetail(props) {
         },
       });
       console.log(result);
-      alert('SUKSES MEMBUAT ASSESMEN');
+      alert('SUKSES MEMBUAT ASSESMEN!');
       props.navigation.navigate('Asesmen');
     } catch (error) {
       console.log(error);
       console.log('Error Response:', error.response.data);
       console.log('Error Headers:', error.response.headers);
       console.log('Error Config:', error.config);
-      alert('Failed to create assessment. See console for details.');
+      alert('Gagal Membuat Laporan!');
     }
   };
 
@@ -843,6 +843,7 @@ export default function AsesmenDetail(props) {
           </View>
           <View style={{marginTop: 10}}>
             <Text style={style.textTitleInput}>File Gambar</Text>
+            <Text style={{color: 'red', fontSize: 10}}>Maks. 2 Gambar</Text>
 
             <View style={{flexDirection: 'row', padding: 10}}>
               <View>

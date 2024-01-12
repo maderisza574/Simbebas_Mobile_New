@@ -60,7 +60,7 @@ export default function VerifikatorDetail(props) {
       const result = await axios.get(`/v1/pusdalops/${pusdalopid}`, config);
       setDataByID(result.data);
     } catch (error) {
-      alert('gagal mendapat kan data');
+      alert('Gagal Mendapatkan Data !');
       console.log(error);
     }
   };
@@ -296,6 +296,7 @@ export default function VerifikatorDetail(props) {
       console.log('INI DATA VERIF', formData);
       console.log('INI DATA VERIF', result);
       alert('SUKSES MEBUAT VERIFIKASI');
+      props.navigation.navigate('Verifikator');
     } catch (error) {
       alert(error.message);
       console.log(error);
@@ -677,8 +678,9 @@ export default function VerifikatorDetail(props) {
                 </View>
               </View>
             </View>
-            <View>
-              <Text>Upload File Gambar</Text>
+            <View style={{paddingTop: '5%'}}>
+              <Text style={{color: 'black'}}>Upload File Gambar</Text>
+              <Text style={{color: 'red', fontSize: 10}}>Maks. 2 Gambar</Text>
             </View>
             <View>
               <View>

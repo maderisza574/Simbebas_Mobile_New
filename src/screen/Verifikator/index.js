@@ -180,8 +180,10 @@ export default function Verifikator(props) {
                       )}
                     </View> */}
                     <View style={{marginLeft: '28%'}}>
-                      {item.lock === false ? (
-                        <View style={{backgroundColor: 'red', height: 500}}>
+                      {item.lock_gudang === false ? (
+                        <View
+                          style={{backgroundColor: 'red', height: 500}}
+                          onPress={() => navVerifDetail(item.id)}>
                           <Text style={{color: 'red'}}>TES</Text>
                         </View>
                       ) : (

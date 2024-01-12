@@ -849,6 +849,7 @@ export default function PusdalopCreate(props) {
           {/* End Alamat */}
           <View style={{marginTop: 20}}>
             <Text style={style.titleOption}>Upload gambar</Text>
+            <Text style={{color: 'red', fontSize: 10}}>Maks. 2 Gambar</Text>
           </View>
 
           <View
