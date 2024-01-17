@@ -36,14 +36,20 @@ export default function Penanganan(props) {
 
   useEffect(() => {
     axioses
-      .get(`/v1/listUser?page=1&perPage=10&role=Simasbabe-Trc`)
+      .get(
+        `https://apisimbebas.banyumaskab.go.id/api/v1/listUser?page=1&perPage=100&role=Simasbabe`,
+      )
       .then(res => {
-        let newArray = res.data.rows.map(item => {
-          return {key: item.id, value: item.nama};
-        });
-        setDataPetugas(newArray);
+        if (res.data && res.data.rows) {
+          let newArray = res.data.rows.map(item => {
+            return {key: item.id, value: item.nama};
+          });
+          setDataPetugas(newArray);
+        } else {
+          console.error('Invalid response structure:', res);
+        }
       })
-      .catch(error => console.log(error));
+      .catch(error => console.error('API request failed:', error));
   }, []);
 
   const handleCreatePenugasan = async () => {
@@ -58,7 +64,7 @@ export default function Penanganan(props) {
 
       const dataToSend = {
         user: String(user),
-        id_pusdalops: pusdalopid ,
+        id_pusdalops: parseInt(pusdalopid),
       };
 
       console.log('INI DATA KIRIM', dataToSend);
@@ -69,6 +75,7 @@ export default function Penanganan(props) {
         {
           headers: {
             Authorization: `Bearer ${datauser}`,
+            'Content-Type': 'application/json',
           },
         },
       );
@@ -94,14 +101,7 @@ export default function Penanganan(props) {
       props.navigation.navigate('PenangananView');
     } catch (error) {
       console.log('Error creating penugasan:', error);
-      if (error.response && error.response.status === 400) {
-        console.log('Server error: Bad request');
-        // Display a message to the user indicating a server issue
-      } else {
-        console.log('An error occurred:', error.message);
-        // Display a general error message to the user
-      }
-      Alert.alert('GAGAL MEMBUAT LAPORAN');
+      Alert.alert('Data Sudah Dibuat');
     }
   };
 

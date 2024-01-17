@@ -82,13 +82,56 @@ export default function Pusdalop(props) {
             <Text style={style.texttitle}>Riwayat Bencana</Text>
           </View>
           {/* <View style={{paddingHorizontal: 10, backgroundColor: 'red'}}> */}
-          <Pressable style={style.buttonLogin} onPress={navPusdalopDetail}>
-            <View style={{paddingVertical: 10, alignItems: 'center'}}>
-              <Text style={style.textLogin}>Buat Laporan</Text>
+          {/* button and status */}
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <View style={{minWidth: '100%', minHeight: '100%'}}>
+              <Pressable style={style.buttonLogin} onPress={navPusdalopDetail}>
+                <View style={{paddingVertical: 10, alignItems: 'center'}}>
+                  <Text style={style.textLogin}>Buat Laporan</Text>
+                </View>
+              </Pressable>
             </View>
-          </Pressable>
+            {/* status */}
+            <View style={{marginLeft: '-55%', paddingTop: '5%'}}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 20,
+                      backgroundColor: 'green',
+                    }}>
+                    {/* <Text>TES</Text> */}
+                  </View>
+                  <View style={{marginLeft: 10, marginRight: 5}}>
+                    <Text style={{color: 'green'}}>Dikunci</Text>
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 20,
+                      backgroundColor: 'red',
+                    }}>
+                    {/* <Text>TES</Text> */}
+                  </View>
+                  <View style={{marginLeft: 10}}>
+                    <Text style={{color: 'red'}}>Dibuka</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            {/* end status */}
+          </View>
+          {/* end button and status */}
+
           {/* </View> */}
         </View>
+
         <View style={style.containerFlat}>
           <View style={{marginBottom: '10%'}}>
             <FlatList
@@ -110,7 +153,11 @@ export default function Pusdalop(props) {
               onEndReachedThreshold={0.5}
               renderItem={({item}) => (
                 <TouchableHighlight
-                  onPress={() => navPusdalop(item.id)}
+                  onPress={() => {
+                    if (!item.lock) {
+                      navPusdalop(item.id);
+                    }
+                  }}
                   underlayColor="#eeeedd">
                   <View style={style.card}>
                     <Image

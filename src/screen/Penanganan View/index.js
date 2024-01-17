@@ -73,15 +73,57 @@ export default function PenangananView(props) {
       </View>
       <View style={style.containerInput}>
         <View style={style.containerButton}>
-          <View>
-            <Text style={style.texttitle}>Riwayat Bencana</Text>
+          <View style={{flexDirection: 'row', marginTop: '5%'}}>
+            <View
+              style={{
+                // flex: 1,
+                // paddingTop: '5%',
+                minWidth: '40%',
+                // backgroundColor: 'red',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{color: 'black', fontWeight: 'bold'}}>
+                Riwayat Bencana
+              </Text>
+            </View>
+            <View>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 20,
+                      backgroundColor: 'green',
+                    }}>
+                    {/* <Text>TES</Text> */}
+                  </View>
+                  <View style={{marginLeft: 10, marginRight: 5}}>
+                    <Text style={{color: 'green'}}>Dikunci</Text>
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 20,
+                      backgroundColor: 'red',
+                    }}>
+                    {/* <Text>TES</Text> */}
+                  </View>
+                  <View style={{marginLeft: 10}}>
+                    <Text style={{color: 'red'}}>Dibuka</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
           </View>
           {/* <View style={{paddingHorizontal: 10, backgroundColor: 'red'}}> */}
-          <Pressable style={style.buttonLogin} onPress={navPusdalopDetail}>
+          {/* <Pressable style={style.buttonLogin} onPress={navPusdalopDetail}>
             <View style={{paddingVertical: 10, alignItems: 'center'}}>
               <Text style={style.textLogin}>Buat Laporan</Text>
             </View>
-          </Pressable>
+          </Pressable> */}
           {/* </View> */}
         </View>
         <View style={style.containerFlat}>

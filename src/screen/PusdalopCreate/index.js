@@ -101,9 +101,9 @@ export default function PusdalopCreate(props) {
           },
           error => {
             if (error.code === error.TIMEOUT) {
-              alert('Position unavailable. Please try again later.');
+              alert('Posisi tidak ditemukan, mohon coba kembali');
             } else {
-              alert('An error occurred while retrieving your location.');
+              alert('Error saat mendapatkan data lokasi');
             }
             setLoading(false);
           },
@@ -304,7 +304,7 @@ export default function PusdalopCreate(props) {
         });
 
       if (images.length === 0) {
-        alert('Please select at least one image.');
+        alert('Mohon Pilih beberapa gambar');
         return; // Prevent the request if no images are selected
       }
 
@@ -342,9 +342,7 @@ export default function PusdalopCreate(props) {
       if (axios.isAxiosError(error)) {
         if (error.response && error.response.status === 403) {
           // Handle 403 Forbidden error
-          alert(
-            'Permission denied. You are not authorized to perform this action.',
-          );
+          alert('ijin Aplikasi tidak ditemukan, mohon berikan ijin aplikasi');
         } else {
           // Handle other Axios errors
           alert(error.response.data.message);

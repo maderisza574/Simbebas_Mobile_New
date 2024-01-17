@@ -68,72 +68,116 @@ export default function Asesmen(props) {
         </View>
       </View>
       <View style={style.containerInput}>
-        <View>
-          <Text style={style.texttitle}>Riwayat Bencana</Text>
-        </View>
-        <View style={style.containerFlat}>
-          <FlatList
+        <View style={{flexDirection: 'row', marginTop: '5%'}}>
+          <View
             style={{
-              marginBottom: '5%',
-              elevation: 10,
-              shadowColor: '#0000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.5,
-              shadowRadius: 10,
-            }}
-            data={pusdalop}
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            onEndReached={handleEndReached}
-            onEndReachedThreshold={0.5}
-            renderItem={({item}) => (
-              <TouchableHighlight
-                onPress={() => {
-                  if (!item.lock) {
-                    navAsesmenDetail(item.id);
-                  }
-                }}
-                underlayColor="#eeeedd"
-                disabled={item.lock}>
-                <View style={style.card}>
-                  <View style={{flexDirection: 'row'}}>
-                    <Image
-                      source={
-                        item.risalah[0]?.file
-                          ? {
-                              uri: `${item.risalah[0]?.file}`,
-                            }
-                          : require('../../assets/img/bencana1.png')
-                      }
-                      style={{width: 100, height: 185, borderRadius: 8}}
-                    />
-                    <View style={style.cardContent}>
-                      <Text style={style.textFlatlistTitle}>{item.nama}</Text>
-                      <Text style={style.textFlatlistSubtitle}>
-                        {item.alamat}
-                      </Text>
-                      <Text style={style.textFlatlistSubtitle}>
-                        {moment(item.tanggal).format('YYYY-MM-DD')}
-                      </Text>
-                      <View
-                        style={{
-                          alignContent: 'center',
-                          alignItems: 'center',
-                          paddingTop: '5%',
-                        }}>
-                        <Pressable
-                          style={style.buttonLihat}
-                          onPress={() => navAsesmenDetail(item.id)}>
-                          <View style={{alignItems: 'center'}}>
-                            <Text style={style.textLihat}>Lihat</Text>
-                          </View>
-                        </Pressable>
-                      </View>
+              // flex: 1,
+              // paddingTop: '5%',
+              minWidth: '40%',
+              // backgroundColor: 'red',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>
+              Riwayat Bencana
+            </Text>
+          </View>
+          <View>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 20,
+                    backgroundColor: 'green',
+                  }}>
+                  {/* <Text>TES</Text> */}
+                </View>
+                <View style={{marginLeft: 10, marginRight: 5}}>
+                  <Text style={{color: 'green'}}>Dikunci</Text>
+                </View>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 20,
+                    backgroundColor: 'red',
+                  }}>
+                  {/* <Text>TES</Text> */}
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Text style={{color: 'red'}}>Dibuka</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      <View style={style.containerFlat}>
+        <FlatList
+          style={{
+            marginBottom: '5%',
+            elevation: 10,
+            shadowColor: '#0000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.5,
+            shadowRadius: 10,
+          }}
+          data={pusdalop}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5}
+          renderItem={({item}) => (
+            <TouchableHighlight
+              onPress={() => {
+                if (!item.lock === false) {
+                  navAsesmenDetail(item.id);
+                }
+              }}
+              underlayColor="#eeeedd"
+              disabled={item.lock}>
+              <View style={style.card}>
+                <View style={{flexDirection: 'row'}}>
+                  <Image
+                    source={
+                      item.risalah[0]?.file
+                        ? {
+                            uri: `${item.risalah[0]?.file}`,
+                          }
+                        : require('../../assets/img/bencana1.png')
+                    }
+                    style={{width: 100, height: 185, borderRadius: 8}}
+                  />
+                  <View style={style.cardContent}>
+                    <Text style={style.textFlatlistTitle}>{item.nama}</Text>
+                    <Text style={style.textFlatlistSubtitle}>
+                      {item.alamat}
+                    </Text>
+                    <Text style={style.textFlatlistSubtitle}>
+                      {moment(item.tanggal).format('YYYY-MM-DD')}
+                    </Text>
+                    <View
+                      style={{
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        paddingTop: '5%',
+                      }}>
+                      <Pressable
+                        style={style.buttonLihat}
+                        onPress={() => navAsesmenDetail(item.id)}>
+                        <View style={{alignItems: 'center'}}>
+                          <Text style={style.textLihat}>Lihat</Text>
+                        </View>
+                      </Pressable>
                     </View>
-                    {/* <View>
+                  </View>
+                  {/* <View>
                       <View style={{marginLeft: '20%'}}>
                         {item.lock === false ? (
                           <Text
@@ -156,24 +200,23 @@ export default function Asesmen(props) {
                         )}
                       </View>
                     </View> */}
-                    <View style={{marginLeft: '28%'}}>
-                      {item.lock_verif === false ? (
-                        <View style={{backgroundColor: 'red', height: 500}}>
-                          <Text style={{color: 'red'}}>TES</Text>
-                        </View>
-                      ) : (
-                        <View style={{backgroundColor: 'green', height: 500}}>
-                          <Text style={{color: 'green'}}>TES</Text>
-                        </View>
-                      )}
-                    </View>
+                  <View style={{marginLeft: '28%'}}>
+                    {item.lock_verif === false ? (
+                      <View style={{backgroundColor: 'red', height: 500}}>
+                        <Text style={{color: 'red'}}>TES</Text>
+                      </View>
+                    ) : (
+                      <View style={{backgroundColor: 'green', height: 500}}>
+                        <Text style={{color: 'green'}}>TES</Text>
+                      </View>
+                    )}
                   </View>
                 </View>
-              </TouchableHighlight>
-            )}
-            keyExtractor={item => item.id}
-          />
-        </View>
+              </View>
+            </TouchableHighlight>
+          )}
+          keyExtractor={item => item.id}
+        />
       </View>
     </View>
   );
@@ -258,7 +301,7 @@ const style = StyleSheet.create({
   },
   texttitle: {
     color: 'black',
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
     fontWeight: 'bold',
   },
   // containerButton: {

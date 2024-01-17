@@ -97,68 +97,103 @@ export default function Verifikator(props) {
       </View>
       <View style={style.containerInput}>
         {/* <View> */}
-        <Text
-          style={{
-            color: 'black',
-            paddingHorizontal: 10,
-            paddingVertical: 10,
-            fontWeight: 'bold',
-          }}>
-          Riwayat Bencana
-        </Text>
-        {/* </View> */}
-        <View style={style.containerFlat}>
-          <FlatList
+        <View style={{flexDirection: 'row', marginTop: '5%'}}>
+          <View
             style={{
-              marginBottom: '5%',
-              elevation: 10,
-              shadowColor: '#0000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.5,
-              shadowRadius: 10,
-            }}
-            data={dataVerif}
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            onEndReached={handleEndReached}
-            onEndReachedThreshold={0.5}
-            renderItem={({item}) => (
-              <TouchableHighlight
-                onPress={() => {
-                  if (!item.lock_gudang) {
-                    navVerifDetail(item.id);
-                  }
-                }}
-                underlayColor="#eeeedd">
-                <View style={style.card}>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={style.cardContent}>
-                      <Text style={style.textFlatlistTitle}>{item.nama}</Text>
-                      <Text style={style.textFlatlistSubtitle}>
-                        {item.alamat}
-                      </Text>
-                      <Text style={style.textFlatlistSubtitle}>
-                        {moment(item.tanggal).format('YYYY-MM-DD')}
-                      </Text>
-                      <View
-                        style={{
-                          alignContent: 'center',
-                          alignItems: 'center',
-                          paddingTop: '5%',
-                        }}>
-                        <Pressable
-                          style={style.buttonLihat}
-                          onPress={() => navVerifDetail(item.id)}>
-                          <View style={{alignItems: 'center'}}>
-                            <Text style={style.textLihat}>Lihat</Text>
-                          </View>
-                        </Pressable>
-                      </View>
+              // flex: 1,
+              // paddingTop: '5%',
+              minWidth: '40%',
+              // backgroundColor: 'red',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>
+              Riwayat Bencana
+            </Text>
+          </View>
+          <View>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 20,
+                    backgroundColor: 'green',
+                  }}>
+                  {/* <Text>TES</Text> */}
+                </View>
+                <View style={{marginLeft: 10, marginRight: 5}}>
+                  <Text style={{color: 'green'}}>Dikunci</Text>
+                </View>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 20,
+                    backgroundColor: 'red',
+                  }}>
+                  {/* <Text>TES</Text> */}
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Text style={{color: 'red'}}>Dibuka</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      {/* </View> */}
+      <View style={style.containerFlat}>
+        <FlatList
+          style={{
+            marginBottom: '5%',
+            elevation: 10,
+            shadowColor: '#0000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.5,
+            shadowRadius: 10,
+          }}
+          data={dataVerif}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5}
+          renderItem={({item}) => (
+            <TouchableHighlight
+              onPress={() => {
+                if (!item.lock_gudang === true) {
+                  navVerifDetail(item.id);
+                }
+              }}
+              underlayColor="#eeeedd">
+              <View style={style.card}>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={style.cardContent}>
+                    <Text style={style.textFlatlistTitle}>{item.nama}</Text>
+                    <Text style={style.textFlatlistSubtitle}>
+                      {item.alamat}
+                    </Text>
+                    <Text style={style.textFlatlistSubtitle}>
+                      {moment(item.tanggal).format('YYYY-MM-DD')}
+                    </Text>
+                    <View
+                      style={{
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        paddingTop: '5%',
+                      }}>
+                      <Pressable style={style.buttonLihat}>
+                        <View style={{alignItems: 'center'}}>
+                          <Text style={style.textLihat}>Lihat</Text>
+                        </View>
+                      </Pressable>
                     </View>
-                    {/* <View style={{marginLeft: '20%'}}>
+                  </View>
+                  {/* <View style={{marginLeft: '20%'}}>
                       {item.lock_gudang === false ? (
                         <Text
                           style={{
@@ -179,26 +214,25 @@ export default function Verifikator(props) {
                         </Text>
                       )}
                     </View> */}
-                    <View style={{marginLeft: '28%'}}>
-                      {item.lock_gudang === false ? (
-                        <View
-                          style={{backgroundColor: 'red', height: 500}}
-                          onPress={() => navVerifDetail(item.id)}>
-                          <Text style={{color: 'red'}}>TES</Text>
-                        </View>
-                      ) : (
-                        <View style={{backgroundColor: 'green', height: 500}}>
-                          <Text style={{color: 'green'}}>TES</Text>
-                        </View>
-                      )}
-                    </View>
+                  <View style={{marginLeft: '28%'}}>
+                    {item.lock_gudang === false ? (
+                      <View
+                        style={{backgroundColor: 'red', height: 500}}
+                        onPress={() => navVerifDetail(item.id)}>
+                        <Text style={{color: 'red'}}>TES</Text>
+                      </View>
+                    ) : (
+                      <View style={{backgroundColor: 'green', height: 500}}>
+                        <Text style={{color: 'green'}}>TES</Text>
+                      </View>
+                    )}
                   </View>
                 </View>
-              </TouchableHighlight>
-            )}
-            keyExtractor={item => item.id}
-          />
-        </View>
+              </View>
+            </TouchableHighlight>
+          )}
+          keyExtractor={item => item.id}
+        />
       </View>
     </View>
   );
