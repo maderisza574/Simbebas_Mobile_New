@@ -179,7 +179,7 @@ export default function Penanganan(props) {
                   style={style.button}
                 />
               ) : (
-                <Text style={style.button}>Login</Text>
+                <Text style={style.button}>Kirim</Text>
               )}
             </Pressable>
             <Pressable style={style.buttonBatal} onPress={navBackView}>

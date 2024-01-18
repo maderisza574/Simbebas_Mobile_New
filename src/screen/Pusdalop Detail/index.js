@@ -472,10 +472,13 @@ export default function PusdalopDetail(props) {
                 // placeholderTextColor: 'gray',
               }}
             />
-
-            <Pressable style={style.buttonLogin} onPress={() => setOpen(true)}>
-              <Text style={style.textLogin}>Pilih Tanggal dan waktu</Text>
-            </Pressable>
+            <View style={{marginTop: '-5%'}}>
+              <Pressable
+                style={style.buttonLogin}
+                onPress={() => setOpen(true)}>
+                <Text style={style.textLogin}>Pilih Tanggal dan waktu</Text>
+              </Pressable>
+            </View>
             {/* <Button
               title="Pilih Tanggal dan waktu"
               onPress={() => setOpen(true)}

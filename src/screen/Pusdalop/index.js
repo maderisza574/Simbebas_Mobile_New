@@ -21,29 +21,45 @@ export default function Pusdalop(props) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
+  const [allPagesLoaded, setAllPagesLoaded] = useState(false);
   const [totalPage, setTotalPage] = useState(5);
   const [page, setPage] = useState(1);
+  const [scrollDirection, setScrollDirection] = useState('up');
+  // console.log(scrollDirection);
+  const [lastScrollOffset, setLastScrollOffset] = useState(0);
   const [last, setLast] = useState(false);
   const pusdalop = useSelector(state => state.pusdalop.data);
+  console.log(pusdalop);
   const dispatch = useDispatch();
 
   useEffect(() => {
     fetchData();
   }, [page]);
 
+  const incrementPage = () => {
+    if (!loadMore && !last && !allPagesLoaded && page < totalPage) {
+      setLoadMore(true);
+      setPage(page + 1);
+    }
+  };
+
+  const decrementPage = () => {
+    if (!loadMore && !last && !allPagesLoaded && page > 1) {
+      setLoadMore(true);
+      setPage(page - 1);
+    }
+  };
+
   const fetchData = async () => {
     try {
       setLoading(true);
       const response = await dispatch(getDataPusdalop(page));
       setTotalPage(response.data.totalPages);
-      setLast(page >= response.data.totalPages);
+      // If the current page is the last page, set allPagesLoaded to true
+      setAllPagesLoaded(page >= response.data.totalPages);
     } catch (error) {
       console.log(error);
-      // alert('SILAHKAN LOGIN ULANG');
-      // await AsyncStorage.clear();
-      // props.navigation.replace('AuthScreen', {
-      //   screen: 'Login',
-      // });
+      // Handle error if needed
     } finally {
       setLoading(false);
       setLoadMore(false);
@@ -58,16 +74,36 @@ export default function Pusdalop(props) {
     // console.log('ini id flat list', id);
     props.navigation.navigate('PusdalopDetail', {pusdalopId: id});
   };
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setRefreshing(true);
-    setPage(1); // Reset page to 1 when refreshing
-    fetchData().finally(() => setRefreshing(false));
-  };
-  const handleEndReached = () => {
-    if (!loadMore && !last) {
-      setLoadMore(true);
-      setPage(page + 1);
+    try {
+      await fetchData();
+      setPage(1); // Reset page to 1 when refreshing
+    } finally {
+      setRefreshing(false);
     }
+  };
+
+  // const handleEndReached = () => {
+  //   if (!loadMore && !last && !allPagesLoaded) {
+  //     setLoadMore(true);
+  //     if (page < totalPage) {
+  //       setPage(page + 1);
+  //     } else {
+  //       setAllPagesLoaded(true);
+  //     }
+  //   }
+  // };
+
+  const renderLoadingIndicator = () => {
+    if (loading && !refreshing) {
+      return (
+        <View style={style.activityIndicatorContainer}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      );
+    }
+    return null;
   };
 
   const renderItem = ({item}) => {
@@ -149,9 +185,26 @@ export default function Pusdalop(props) {
 
           {/* </View> */}
         </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginHorizontal: 10,
+          }}>
+          <TouchableOpacity
+            style={style.paginationButton}
+            onPress={decrementPage}>
+            <Text style={style.textLogin}>-</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={style.paginationButton}
+            onPress={incrementPage}>
+            <Text style={style.textLogin}>+</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={style.containerFlat}>
-          <View style={{marginBottom: '10%'}}>
+          <View style={{marginBottom: '45%'}}>
             <FlatList
               style={{
                 marginBottom: '5%',
@@ -167,8 +220,11 @@ export default function Pusdalop(props) {
               data={pusdalop}
               refreshing={refreshing}
               onRefresh={handleRefresh}
-              onEndReached={handleEndReached}
-              onEndReachedThreshold={0.5}
+              // onScroll={handleScroll}
+              // onEndReached={handleEndReached}
+              // onEndReachedThreshold={0.1}
+              // scrollEventThrottle={400}
+              ListHeaderComponent={renderLoadingIndicator}
               renderItem={({item}) => (
                 <TouchableHighlight
                   onPress={() => {
@@ -231,20 +287,9 @@ export default function Pusdalop(props) {
                   </View>
                 </TouchableHighlight>
               )}
-              keyExtractor={item => item.id}
+              keyExtractor={item => `${item.id}`}
+              // Convert to string if necessary
               ItemSeparatorComponent={() => <View style={{height: 5}} />}
-              onEndReached={handleEndReached}
-              onEndReachedThreshold={0.1}
-              onScrollEndDrag={handleEndReached}
-              ListFooterComponent={() => (
-                <View style={{alignItems: 'center'}}>
-                  {last ? (
-                    <Text>-- No more data --</Text>
-                  ) : loading ? (
-                    <ActivityIndicator size="large" color="blue" />
-                  ) : null}
-                </View>
-              )}
             />
           </View>
         </View>
@@ -253,6 +298,19 @@ export default function Pusdalop(props) {
   );
 }
 const style = StyleSheet.create({
+  paginationButton: {
+    borderRadius: 7,
+    backgroundColor: '#ff471a',
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activityIndicatorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50, // Adjust the height as needed
+  },
   titleScreen: {
     backgroundColor: '#FF6A16',
     color: 'white',

@@ -1,6 +1,6 @@
 import axios from '../../utils/axios';
 
-export const getDataPusdalop = (page = 1, perPage = 30) => ({
+export const getDataPusdalop = (page = 1, perPage = 10) => ({
   type: 'GET_PUSDALOP',
   payload: axios.get(`/v1/pusdalops?page=${page}&perPage=${perPage}`),
 });
