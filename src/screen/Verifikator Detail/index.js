@@ -10,6 +10,7 @@ import {
   Image,
   PermissionsAndroid,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import {SelectList} from 'react-native-dropdown-select-list';
@@ -29,6 +30,7 @@ export default function VerifikatorDetail(props) {
   const [images, setImages] = useState([]);
   const [dataStokBrang, setDataStokBarang] = useState('');
   const [inputs, setInputs] = useState([{value: '', image: null}]);
+  const [isLoading, setIsLoading] = useState(false);
   const lat = parseFloat(dataById?.data?.lat);
   const lng = parseFloat(dataById?.data?.lng);
   const defaultLat = -7.43973580004;
@@ -230,6 +232,7 @@ export default function VerifikatorDetail(props) {
   });
   const handleCreateVerifikator = async () => {
     try {
+      setIsLoading(true);
       const formData = new FormData();
       // formData.append('tindakan_trc', dataVerifikator.tindakan_trc);
       // formData.append('langsung', dataVerifikator.langsung);
@@ -298,7 +301,8 @@ export default function VerifikatorDetail(props) {
       alert('SUKSES MEBUAT VERIFIKASI');
       props.navigation.navigate('Verifikator');
     } catch (error) {
-      alert(error.message);
+      setIsLoading(false);
+      alert(error.response.data.message);
       console.log(error);
     }
   };
@@ -869,13 +873,22 @@ export default function VerifikatorDetail(props) {
                       height: 35,
                     }}
                     onPress={handleCreateVerifikator}>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontWeight: 'bold',
-                      }}>
-                      Verifikasi & Simpan
-                    </Text>
+                    {isLoading ? (
+                      <ActivityIndicator
+                        animating={isLoading}
+                        color="white"
+                        size={20}
+                        style={style.button}
+                      />
+                    ) : (
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontWeight: 'bold',
+                        }}>
+                        Verifikasi & Simpan
+                      </Text>
+                    )}
                   </Pressable>
                 </View>
                 <View>

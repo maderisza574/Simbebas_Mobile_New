@@ -11,35 +11,33 @@ import {TouchableHighlight} from 'react-native-gesture-handler';
 export default function Verifikator(props) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [totalPage, setTotalPage] = useState(5);
+  const [page, setPage] = useState(1);
+  const [last, setLast] = useState(false);
   const pusdalop = useSelector(state => state.pusdalop.data);
   const dispatch = useDispatch();
   const [dataVerif, setDataVerif] = useState({});
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
   const fetchData = async () => {
     try {
-      const datauser = await AsyncStorage.getItem('token');
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer ' + datauser,
-        },
-      };
-      const result = await axios.get(
-        `/v1/verfikasi?page=1&perPage=100`,
-        config,
-      );
-      setDataVerif(result.data.rows);
-
-      // await dispatch(getDataPusdalop());
+      setLoading(true);
+      const response = await dispatch(getDataPusdalop(page));
+      setTotalPage(response.data.totalPages);
+      setLast(page >= response.data.totalPages);
     } catch (error) {
-      alert('SILAHKAN LOGIN ULANG');
-      await AsyncStorage.clear();
-      props.navigation.replace('AuthScreen', {
-        screen: 'Login',
-      });
+      console.log(error);
+      // alert('SILAHKAN LOGIN ULANG');
+      // await AsyncStorage.clear();
+      // props.navigation.replace('AuthScreen', {
+      //   screen: 'Login',
+      // });
+    } finally {
+      setLoading(false);
+      setLoadMore(false);
     }
   };
   const navVerifDetail = id => {
@@ -47,34 +45,17 @@ export default function Verifikator(props) {
     // console.log('ini id flat list', id);
     props.navigation.navigate('VerifikatorDetail', {pusdalopId: id});
   };
-  const handleRefresh = async () => {
+  const handleRefresh = () => {
     setRefreshing(true);
-    try {
-      const datauser = await AsyncStorage.getItem('token');
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer ' + datauser,
-        },
-      };
-      const result = await axios.get(
-        `/v1/verfikasi?page=1&perPage=100`,
-        config,
-      );
-      setDataVerif(result.data.rows);
-    } catch (error) {
-      alert('SILAHKAN LOGIN ULANG');
-      await AsyncStorage.clear();
-      props.navigation.replace('AuthScreen', {
-        screen: 'Login',
-      });
-    } finally {
-      setRefreshing(false);
-    }
+    setPage(1); // Reset page to 1 when refreshing
+    fetchData().finally(() => setRefreshing(false));
   };
 
   const handleEndReached = () => {
-    dispatch(fetchData());
+    if (!loadMore && !last) {
+      setLoadMore(true);
+      setPage(page + 1);
+    }
   };
   const renderItem = ({item}) => {
     // render your item here
@@ -157,11 +138,12 @@ export default function Verifikator(props) {
             shadowOpacity: 0.5,
             shadowRadius: 10,
           }}
-          data={dataVerif}
+          data={pusdalop}
           refreshing={refreshing}
           onRefresh={handleRefresh}
           onEndReached={handleEndReached}
-          onEndReachedThreshold={0.5}
+          onScrollEndDrag={handleEndReached}
+          onEndReachedThreshold={0.1}
           renderItem={({item}) => (
             <TouchableHighlight
               onPress={() => {

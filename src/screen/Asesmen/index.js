@@ -20,28 +20,45 @@ export default function Asesmen(props) {
   console.log('INI DATA GET PUSDALOP', pusdalop);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [totalPage, setTotalPage] = useState(5);
+  const [page, setPage] = useState(1);
+  const [last, setLast] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await dispatch(getDataPusdalop());
-      } catch (error) {
-        alert('SILAHKAN LOGIN ULANG');
-        await AsyncStorage.clear();
-        props.navigation.replace('AuthScreen', {
-          screen: 'Login',
-        });
-      }
-    };
     fetchData();
-  }, []);
+  }, [page]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await dispatch(getDataPusdalop(page));
+      setTotalPage(response.data.totalPages);
+      setLast(page >= response.data.totalPages);
+    } catch (error) {
+      console.log(error);
+      // alert('SILAHKAN LOGIN ULANG');
+      // await AsyncStorage.clear();
+      // props.navigation.replace('AuthScreen', {
+      //   screen: 'Login',
+      // });
+    } finally {
+      setLoading(false);
+      setLoadMore(false);
+    }
+  };
+
   const handleRefresh = () => {
     setRefreshing(true);
-    dispatch(getDataPusdalop()).finally(() => setRefreshing(false));
+    setPage(1); // Reset page to 1 when refreshing
+    fetchData().finally(() => setRefreshing(false));
   };
   const handleEndReached = () => {
-    dispatch(getDataPusdalop());
+    if (!loadMore && !last) {
+      setLoadMore(true);
+      setPage(page + 1);
+    }
   };
   const navAsesmenDetail = id => {
     props.navigation.navigate('AsesmenDetail', {pusdalopId: id});
@@ -132,7 +149,7 @@ export default function Asesmen(props) {
           refreshing={refreshing}
           onRefresh={handleRefresh}
           onEndReached={handleEndReached}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.1}
           renderItem={({item}) => (
             <TouchableHighlight
               onPress={() => {

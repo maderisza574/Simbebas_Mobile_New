@@ -9,6 +9,7 @@ import {
   PermissionsAndroid,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import axioses from '../../utils/axios';
 import axios from 'axios';
@@ -28,6 +29,7 @@ import moment from 'moment';
 export default function AsesmenDetail(props) {
   const dispatch = useDispatch();
   const dataPusdalopRedux = useSelector(state => state.pusdalop.data);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
@@ -244,6 +246,7 @@ export default function AsesmenDetail(props) {
   };
   const handleCreateAsesmen = async () => {
     try {
+      setIsLoading(true);
       const formData = new FormData();
       formData.append('rumahrusak_rr', dataAssesmen.rumahrusak_rr);
       formData.append('rumahrusak_rs', dataAssesmen.rumahrusak_rs);
@@ -312,11 +315,12 @@ export default function AsesmenDetail(props) {
       alert('SUKSES MEMBUAT ASSESMEN!');
       props.navigation.navigate('Asesmen');
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
-      console.log('Error Response:', error.response.data);
+      console.log('Error Response:', error.response.data.message);
       console.log('Error Headers:', error.response.headers);
       console.log('Error Config:', error.config);
-      alert('Gagal Membuat Laporan!');
+      alert(error.response.data.message);
     }
   };
 
@@ -906,7 +910,16 @@ export default function AsesmenDetail(props) {
           </View>
           <View style={{marginTop: -4}}>
             <Pressable style={style.buttonSimpan} onPress={handleCreateAsesmen}>
-              <Text style={style.textLogin}>Simpan</Text>
+              {isLoading ? (
+                <ActivityIndicator
+                  animating={isLoading}
+                  color="white"
+                  size={20}
+                  style={style.button}
+                />
+              ) : (
+                <Text style={style.textLogin}>Simpan</Text>
+              )}
             </Pressable>
           </View>
           <View>

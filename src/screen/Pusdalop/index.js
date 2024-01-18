@@ -4,6 +4,7 @@ import {
   Text,
   FlatList,
   StyleSheet,
+  ActivityIndicator,
   Image,
   Pressable,
   TouchableOpacity,
@@ -19,23 +20,35 @@ import {Button} from 'react-native-paper';
 export default function Pusdalop(props) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [totalPage, setTotalPage] = useState(5);
+  const [page, setPage] = useState(1);
+  const [last, setLast] = useState(false);
   const pusdalop = useSelector(state => state.pusdalop.data);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await dispatch(getDataPusdalop());
-      } catch (error) {
-        alert('SILAHKAN LOGIN ULANG');
-        await AsyncStorage.clear();
-        props.navigation.replace('AuthScreen', {
-          screen: 'Login',
-        });
-      }
-    };
     fetchData();
-  }, []);
+  }, [page]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await dispatch(getDataPusdalop(page));
+      setTotalPage(response.data.totalPages);
+      setLast(page >= response.data.totalPages);
+    } catch (error) {
+      console.log(error);
+      // alert('SILAHKAN LOGIN ULANG');
+      // await AsyncStorage.clear();
+      // props.navigation.replace('AuthScreen', {
+      //   screen: 'Login',
+      // });
+    } finally {
+      setLoading(false);
+      setLoadMore(false);
+    }
+  };
 
   const navPusdalopDetail = () => {
     props.navigation.navigate('PusdalopCreate');
@@ -47,16 +60,21 @@ export default function Pusdalop(props) {
   };
   const handleRefresh = () => {
     setRefreshing(true);
-    dispatch(getDataPusdalop()).finally(() => setRefreshing(false));
+    setPage(1); // Reset page to 1 when refreshing
+    fetchData().finally(() => setRefreshing(false));
   };
   const handleEndReached = () => {
-    dispatch(getDataPusdalop());
+    if (!loadMore && !last) {
+      setLoadMore(true);
+      setPage(page + 1);
+    }
   };
+
   const renderItem = ({item}) => {
     // render your item here
   };
   return (
-    <View>
+    <View style={{flex: 1}}>
       <View style={style.titleScreen}>
         <View
           style={{
@@ -215,6 +233,18 @@ export default function Pusdalop(props) {
               )}
               keyExtractor={item => item.id}
               ItemSeparatorComponent={() => <View style={{height: 5}} />}
+              onEndReached={handleEndReached}
+              onEndReachedThreshold={0.1}
+              onScrollEndDrag={handleEndReached}
+              ListFooterComponent={() => (
+                <View style={{alignItems: 'center'}}>
+                  {last ? (
+                    <Text>-- No more data --</Text>
+                  ) : loading ? (
+                    <ActivityIndicator size="large" color="blue" />
+                  ) : null}
+                </View>
+              )}
             />
           </View>
         </View>

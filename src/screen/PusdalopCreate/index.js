@@ -66,7 +66,7 @@ export default function PusdalopCreate(props) {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   // console.log('INI DATA MAP', region);
   const requestLocationPermission = async () => {
     console.log('FUNCTION MAP JALAN');
@@ -248,6 +248,7 @@ export default function PusdalopCreate(props) {
 
   const handleCreatePusdalop = async () => {
     try {
+      setIsLoading(true);
       const formData = new FormData();
       formData.append('id_jenis_bencana', dataPusdalop.id_jenis_bencana);
       formData.append('id_tindakan', dataPusdalop.id_tindakan);
@@ -339,6 +340,7 @@ export default function PusdalopCreate(props) {
       alert('SUKSES MEMBUAT LAPORAN');
       props.navigation.navigate('Pusdalop');
     } catch (error) {
+      setIsLoading(false);
       if (axios.isAxiosError(error)) {
         if (error.response && error.response.status === 403) {
           // Handle 403 Forbidden error
@@ -568,9 +570,13 @@ export default function PusdalopCreate(props) {
               style={style.inputTanggal}
               editable={false}
             />
-            <Pressable style={style.buttonLogin} onPress={() => setOpen(true)}>
-              <Text style={style.textLogin}>Pilih Tanggal dan waktu</Text>
-            </Pressable>
+            <View style={{marginTop: '-5%'}}>
+              <Pressable
+                style={style.buttonLogin}
+                onPress={() => setOpen(true)}>
+                <Text style={style.textLogin}>Pilih Tanggal dan waktu</Text>
+              </Pressable>
+            </View>
             <DatePicker
               modal
               open={open}
@@ -936,7 +942,16 @@ export default function PusdalopCreate(props) {
           {/* end input loop image */}
           <View style={{marginTop: 10}}>
             <Pressable style={style.buttonLogin} onPress={handleCreatePusdalop}>
-              <Text style={style.textLogin}>Kirim</Text>
+              {isLoading ? (
+                <ActivityIndicator
+                  animating={isLoading}
+                  color="white"
+                  size={20}
+                  style={style.button}
+                />
+              ) : (
+                <Text style={style.textLogin}>Kirim</Text>
+              )}
             </Pressable>
             <Pressable style={style.buttonBatal} onPress={navPusdalop}>
               <Text style={style.textLogin}>Batal</Text>

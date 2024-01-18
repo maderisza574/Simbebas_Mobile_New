@@ -1,8 +1,8 @@
 import axios from '../../utils/axios';
 
-export const getDataPusdalop = () => ({
+export const getDataPusdalop = (page = 1, perPage = 30) => ({
   type: 'GET_PUSDALOP',
-  payload: axios.get('/v1/pusdalops?page=1&perPage=30'),
+  payload: axios.get(`/v1/pusdalops?page=${page}&perPage=${perPage}`),
 });
 export const getDataPusdalopById = (pusdalopid, config) => ({
   type: 'GET_PUSDALOP_BY_ID',

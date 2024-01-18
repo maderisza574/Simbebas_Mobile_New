@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {SelectList} from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -16,6 +17,7 @@ import {Item} from 'react-native-paper/lib/typescript/src/components/Drawer/Draw
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Penanganan(props) {
   const [dataPetugas, setDataPetugas] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const navBackView = () => {
     props.navigation.navigate('PenangananView');
   };
@@ -54,6 +56,7 @@ export default function Penanganan(props) {
 
   const handleCreatePenugasan = async () => {
     try {
+      setIsLoading(true);
       const datauser = await AsyncStorage.getItem('token');
       console.log('Ini Data User', datauser);
 
@@ -100,8 +103,10 @@ export default function Penanganan(props) {
       Alert.alert('SUKSES MEMBUAT LAPORAN');
       props.navigation.navigate('PenangananView');
     } catch (error) {
+      setIsLoading(true);
       console.log('Error creating penugasan:', error);
-      Alert.alert('Data Sudah Dibuat');
+      alert(error.response.data.message);
+      // Alert.alert('Data Sudah Dibuat');
     }
   };
 
@@ -166,7 +171,16 @@ export default function Penanganan(props) {
             <Pressable
               style={style.buttonLogin}
               onPress={handleCreatePenugasan}>
-              <Text style={style.textLogin}>Kirim</Text>
+              {isLoading ? (
+                <ActivityIndicator
+                  animating={isLoading}
+                  color="white"
+                  size={20}
+                  style={style.button}
+                />
+              ) : (
+                <Text style={style.button}>Login</Text>
+              )}
             </Pressable>
             <Pressable style={style.buttonBatal} onPress={navBackView}>
               <Text style={style.textLogin}>Batal</Text>
