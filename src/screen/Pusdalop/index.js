@@ -194,12 +194,12 @@ export default function Pusdalop(props) {
           <TouchableOpacity
             style={style.paginationButton}
             onPress={decrementPage}>
-            <Text style={style.textLogin}>-</Text>
+            <Text style={style.textLogin}>{'<'}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={style.paginationButton}
             onPress={incrementPage}>
-            <Text style={style.textLogin}>+</Text>
+            <Text style={style.textLogin}>{'>'}</Text>
           </TouchableOpacity>
         </View>
 

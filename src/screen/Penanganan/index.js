@@ -8,6 +8,8 @@ import {
   Pressable,
   Alert,
   ActivityIndicator,
+  Modal,
+  TouchableOpacity,
 } from 'react-native';
 import {SelectList} from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -18,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Penanganan(props) {
   const [dataPetugas, setDataPetugas] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const navBackView = () => {
     props.navigation.navigate('PenangananView');
   };
@@ -53,6 +56,17 @@ export default function Penanganan(props) {
       })
       .catch(error => console.error('API request failed:', error));
   }, []);
+
+  const handleConfirm = async () => {
+    // Hide confirmation modal
+
+    setIsConfirmationVisible(true);
+  };
+
+  const handleCancel = () => {
+    // Hide confirmation modal
+    setIsConfirmationVisible(false);
+  };
 
   const handleCreatePenugasan = async () => {
     try {
@@ -100,10 +114,11 @@ export default function Penanganan(props) {
 
       console.log('Notification Response:', notificationResponse.data);
       console.log('Penugasan Response:', penugasanResponse.data);
+      setIsLoading(false);
       Alert.alert('SUKSES MEMBUAT LAPORAN');
       props.navigation.navigate('PenangananView');
     } catch (error) {
-      setIsLoading(true);
+      setIsLoading(false);
       console.log('Error creating penugasan:', error);
       alert(error.response.data.message);
       // Alert.alert('Data Sudah Dibuat');
@@ -113,6 +128,37 @@ export default function Penanganan(props) {
   return (
     <View>
       <ScrollView>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isConfirmationVisible}
+          onRequestClose={() => setIsConfirmationVisible(false)}>
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                padding: 20,
+                borderRadius: 10,
+                elevation: 5,
+              }}>
+              <Text>Apakah anda yakin untuk mengirim laporan?</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 20,
+                }}>
+                <TouchableOpacity onPress={handleCancel}>
+                  <Text style={{color: 'red', fontWeight: 'bold'}}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleCreatePenugasan}>
+                  <Text style={{color: 'green', fontWeight: 'bold'}}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
         <View style={style.titleScreen}>
           <View
             style={{
@@ -168,9 +214,7 @@ export default function Penanganan(props) {
           </View>
 
           <View style={{marginTop: 10}}>
-            <Pressable
-              style={style.buttonLogin}
-              onPress={handleCreatePenugasan}>
+            <Pressable style={style.buttonLogin} onPress={handleConfirm}>
               {isLoading ? (
                 <ActivityIndicator
                   animating={isLoading}

@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import axioses from '../../utils/axios';
 import axios from 'axios';
@@ -30,7 +31,7 @@ export default function AsesmenDetail(props) {
   const dispatch = useDispatch();
   const dataPusdalopRedux = useSelector(state => state.pusdalop.data);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [dataStokBrang, setDataStokBarang] = useState('');
@@ -244,8 +245,19 @@ export default function AsesmenDetail(props) {
       id_barang: [key],
     }));
   };
+  const handleConfirm = async () => {
+    // Hide confirmation modal
+
+    setIsConfirmationVisible(true);
+  };
+
+  const handleCancel = () => {
+    // Hide confirmation modal
+    setIsConfirmationVisible(false);
+  };
   const handleCreateAsesmen = async () => {
     try {
+      setIsConfirmationVisible(false);
       setIsLoading(true);
       const formData = new FormData();
       formData.append('rumahrusak_rr', dataAssesmen.rumahrusak_rr);
@@ -312,6 +324,7 @@ export default function AsesmenDetail(props) {
         },
       });
       console.log(result);
+      setIsLoading(false);
       alert('SUKSES MEMBUAT ASSESMEN!');
       props.navigation.navigate('Asesmen');
     } catch (error) {
@@ -326,6 +339,38 @@ export default function AsesmenDetail(props) {
 
   return (
     <View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isConfirmationVisible}
+        onRequestClose={() => setIsConfirmationVisible(false)}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              padding: 20,
+              borderRadius: 10,
+              elevation: 5,
+            }}>
+            <Text style={{color: 'black'}}>
+              Apakah anda yakin untuk mengirim laporan?
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 20,
+              }}>
+              <TouchableOpacity onPress={handleCancel}>
+                <Text style={{color: 'red', fontWeight: 'bold'}}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCreateAsesmen}>
+                <Text style={{color: 'green', fontWeight: 'bold'}}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <ScrollView>
         <View style={style.titleScreen}>
           <View
@@ -909,7 +954,7 @@ export default function AsesmenDetail(props) {
             </View>
           </View>
           <View style={{marginTop: -4}}>
-            <Pressable style={style.buttonSimpan} onPress={handleCreateAsesmen}>
+            <Pressable style={style.buttonSimpan} onPress={handleConfirm}>
               {isLoading ? (
                 <ActivityIndicator
                   animating={isLoading}

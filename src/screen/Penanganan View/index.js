@@ -7,6 +7,7 @@ import {
   Image,
   Pressable,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import {getDataPusdalop} from '../../stores/actions/pusdalop';
@@ -19,6 +20,7 @@ export default function PenangananView(props) {
   const [loading, setLoading] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
   const [totalPage, setTotalPage] = useState(5);
+  const [allPagesLoaded, setAllPagesLoaded] = useState(false);
   const [page, setPage] = useState(1);
   const [last, setLast] = useState(false);
   const pusdalop = useSelector(state => state.pusdalop.data);
@@ -28,42 +30,63 @@ export default function PenangananView(props) {
     fetchData();
   }, [page]);
 
+  const incrementPage = () => {
+    if (!loadMore && !last && !allPagesLoaded && page < totalPage) {
+      setLoadMore(true);
+      setPage(page + 1);
+    }
+  };
+
+  const decrementPage = () => {
+    if (!loadMore && !last && !allPagesLoaded && page > 1) {
+      setLoadMore(true);
+      setPage(page - 1);
+    }
+  };
+
   const fetchData = async () => {
     try {
       setLoading(true);
       const response = await dispatch(getDataPusdalop(page));
       setTotalPage(response.data.totalPages);
-      setLast(page >= response.data.totalPages);
+      // If the current page is the last page, set allPagesLoaded to true
+      setAllPagesLoaded(page >= response.data.totalPages);
     } catch (error) {
       console.log(error);
-      // alert('SILAHKAN LOGIN ULANG');
-      // await AsyncStorage.clear();
-      // props.navigation.replace('AuthScreen', {
-      //   screen: 'Login',
-      // });
+      // Handle error if needed
     } finally {
       setLoading(false);
       setLoadMore(false);
     }
   };
 
-  const navPusdalopDetail = () => {
-    props.navigation.navigate('PusdalopCreate');
-  };
-
   const naVPenanganan = id => {
     props.navigation.navigate('Penanganan', {pusdalopId: id});
   };
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setRefreshing(true);
-    setPage(1); // Reset page to 1 when refreshing
-    fetchData().finally(() => setRefreshing(false));
+    try {
+      await fetchData();
+      setPage(1); // Reset page to 1 when refreshing
+    } finally {
+      setRefreshing(false);
+    }
   };
   const handleEndReached = () => {
     if (!loadMore && !last) {
       setLoadMore(true);
       setPage(page + 1);
     }
+  };
+  const renderLoadingIndicator = () => {
+    if (loading && !refreshing) {
+      return (
+        <View style={style.activityIndicatorContainer}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      );
+    }
+    return null;
   };
 
   return (
@@ -142,6 +165,23 @@ export default function PenangananView(props) {
           </Pressable> */}
           {/* </View> */}
         </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginHorizontal: 10,
+          }}>
+          <TouchableOpacity
+            style={style.paginationButton}
+            onPress={decrementPage}>
+            <Text style={style.textLogin}>{'<'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={style.paginationButton}
+            onPress={incrementPage}>
+            <Text style={style.textLogin}>{'>'}</Text>
+          </TouchableOpacity>
+        </View>
         <View style={style.containerFlat}>
           <View style={{marginBottom: '10%'}}>
             <FlatList
@@ -159,8 +199,7 @@ export default function PenangananView(props) {
               data={pusdalop}
               refreshing={refreshing}
               onRefresh={handleRefresh}
-              onEndReached={handleEndReached}
-              onEndReachedThreshold={0.5}
+              ListHeaderComponent={renderLoadingIndicator}
               renderItem={({item}) => (
                 <TouchableOpacity
                   onPress={() => naVPenanganan(item.id)}
@@ -214,6 +253,19 @@ export default function PenangananView(props) {
   );
 }
 const style = StyleSheet.create({
+  paginationButton: {
+    borderRadius: 7,
+    backgroundColor: '#ff471a',
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activityIndicatorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50, // Adjust the height as needed
+  },
   titleScreen: {
     backgroundColor: '#FF6A16',
     color: 'white',
@@ -279,6 +331,7 @@ const style = StyleSheet.create({
     borderRadius: 8,
     elevation: 5, // Add elevation for shadow effect
     marginVertical: 8,
+    marginBottom: '40%',
     // Set shadow radius
   },
   texttitle: {

@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Image,
   Pressable,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {getDataPusdalop} from '../../stores/actions/pusdalop';
@@ -22,6 +24,7 @@ export default function Asesmen(props) {
   const [loading, setLoading] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
   const [totalPage, setTotalPage] = useState(5);
+  const [allPagesLoaded, setAllPagesLoaded] = useState(false);
   const [page, setPage] = useState(1);
   const [last, setLast] = useState(false);
   const dispatch = useDispatch();
@@ -30,19 +33,30 @@ export default function Asesmen(props) {
     fetchData();
   }, [page]);
 
+  const incrementPage = () => {
+    if (!loadMore && !last && !allPagesLoaded && page < totalPage) {
+      setLoadMore(true);
+      setPage(page + 1);
+    }
+  };
+
+  const decrementPage = () => {
+    if (!loadMore && !last && !allPagesLoaded && page > 1) {
+      setLoadMore(true);
+      setPage(page - 1);
+    }
+  };
+
   const fetchData = async () => {
     try {
       setLoading(true);
       const response = await dispatch(getDataPusdalop(page));
       setTotalPage(response.data.totalPages);
-      setLast(page >= response.data.totalPages);
+      // If the current page is the last page, set allPagesLoaded to true
+      setAllPagesLoaded(page >= response.data.totalPages);
     } catch (error) {
       console.log(error);
-      // alert('SILAHKAN LOGIN ULANG');
-      // await AsyncStorage.clear();
-      // props.navigation.replace('AuthScreen', {
-      //   screen: 'Login',
-      // });
+      // Handle error if needed
     } finally {
       setLoading(false);
       setLoadMore(false);
@@ -54,11 +68,16 @@ export default function Asesmen(props) {
     setPage(1); // Reset page to 1 when refreshing
     fetchData().finally(() => setRefreshing(false));
   };
-  const handleEndReached = () => {
-    if (!loadMore && !last) {
-      setLoadMore(true);
-      setPage(page + 1);
+
+  const renderLoadingIndicator = () => {
+    if (loading && !refreshing) {
+      return (
+        <View style={style.activityIndicatorContainer}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      );
     }
+    return null;
   };
   const navAsesmenDetail = id => {
     props.navigation.navigate('AsesmenDetail', {pusdalopId: id});
@@ -131,6 +150,23 @@ export default function Asesmen(props) {
           </View>
         </View>
       </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginHorizontal: 10,
+        }}>
+        <TouchableOpacity
+          style={style.paginationButton}
+          onPress={decrementPage}>
+          <Text style={style.textLogin}>{'<'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={style.paginationButton}
+          onPress={incrementPage}>
+          <Text style={style.textLogin}>{'>'}</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={style.containerFlat}>
         <FlatList
@@ -148,8 +184,7 @@ export default function Asesmen(props) {
           data={pusdalop}
           refreshing={refreshing}
           onRefresh={handleRefresh}
-          onEndReached={handleEndReached}
-          onEndReachedThreshold={0.1}
+          ListHeaderComponent={renderLoadingIndicator}
           renderItem={({item}) => (
             <TouchableHighlight
               onPress={() => {
@@ -240,6 +275,14 @@ export default function Asesmen(props) {
 }
 
 const style = StyleSheet.create({
+  paginationButton: {
+    borderRadius: 7,
+    backgroundColor: '#ff471a',
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   titleScreen: {
     backgroundColor: '#FF6A16',
     color: 'white',
@@ -314,6 +357,7 @@ const style = StyleSheet.create({
     borderRadius: 8,
     elevation: 5, // Add elevation for shadow effect
     marginVertical: 8,
+    marginBottom: '35%',
     // Set shadow radius
   },
   texttitle: {

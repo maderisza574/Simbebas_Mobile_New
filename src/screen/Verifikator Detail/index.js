@@ -11,6 +11,7 @@ import {
   PermissionsAndroid,
   TouchableOpacity,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import {SelectList} from 'react-native-dropdown-select-list';
@@ -33,6 +34,7 @@ export default function VerifikatorDetail(props) {
   const [isLoading, setIsLoading] = useState(false);
   const lat = parseFloat(dataById?.data?.lat);
   const lng = parseFloat(dataById?.data?.lng);
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const defaultLat = -7.43973580004;
   const defaultLng = 109.244402567;
   const navVerifikator = () => {
@@ -230,8 +232,19 @@ export default function VerifikatorDetail(props) {
     image: images,
     keteranganImage: [],
   });
+  const handleConfirm = async () => {
+    // Hide confirmation modal
+
+    setIsConfirmationVisible(true);
+  };
+
+  const handleCancel = () => {
+    // Hide confirmation modal
+    setIsConfirmationVisible(false);
+  };
   const handleCreateVerifikator = async () => {
     try {
+      setIsConfirmationVisible(false);
       setIsLoading(true);
       const formData = new FormData();
       // formData.append('tindakan_trc', dataVerifikator.tindakan_trc);
@@ -282,7 +295,7 @@ export default function VerifikatorDetail(props) {
         });
 
       if (images.length === 0) {
-        alert('Please select at least one image.');
+        alert('Mohon upload beberapa gambar!');
         return; // Prevent the request if no images are selected
       }
       const datauser = await AsyncStorage.getItem('token');
@@ -299,6 +312,7 @@ export default function VerifikatorDetail(props) {
       console.log('INI DATA VERIF', formData);
       console.log('INI DATA VERIF', result);
       alert('SUKSES MEBUAT VERIFIKASI');
+      setIsLoading(false);
       props.navigation.navigate('Verifikator');
     } catch (error) {
       setIsLoading(false);
@@ -347,6 +361,37 @@ export default function VerifikatorDetail(props) {
   return (
     <>
       <ScrollView>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isConfirmationVisible}
+          onRequestClose={() => setIsConfirmationVisible(false)}>
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                padding: 20,
+                borderRadius: 10,
+                elevation: 5,
+              }}>
+              <Text>Apakah anda yakin untuk mengirim laporan?</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 20,
+                }}>
+                <TouchableOpacity onPress={handleCancel}>
+                  <Text style={{color: 'red', fontWeight: 'bold'}}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleCreateVerifikator}>
+                  <Text style={{color: 'green', fontWeight: 'bold'}}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
         <View style={style.titleScreen}>
           <View
             style={{
@@ -872,7 +917,7 @@ export default function VerifikatorDetail(props) {
                       backgroundColor: '#1a8cff',
                       height: 35,
                     }}
-                    onPress={handleCreateVerifikator}>
+                    onPress={handleConfirm}>
                     {isLoading ? (
                       <ActivityIndicator
                         animating={isLoading}

@@ -15,6 +15,7 @@ import {
   InteractionManager,
   Alert,
   Platform,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import {SelectList} from 'react-native-dropdown-select-list';
@@ -47,6 +48,7 @@ export default function PusdalopCreate(props) {
   const [images, setImages] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const dataJenis = [
     {key: '1', value: 'PENCEGAHAN'},
     {key: '2', value: 'PENANGGULANGAN'},
@@ -188,11 +190,15 @@ export default function PusdalopCreate(props) {
 
   //  END NEW FUNCION MAP
 
-  const handleAddInput = () => {
-    setInputs([...inputs, {value: '', image: null}]);
+  const handleConfirm = async () => {
+    // Hide confirmation modal
+
+    setIsConfirmationVisible(true);
   };
-  const handleRemoveInput = index => {
-    setInputs(inputs.filter((input, i) => i !== index));
+
+  const handleCancel = () => {
+    // Hide confirmation modal
+    setIsConfirmationVisible(false);
   };
 
   const handleSelect = key => {
@@ -248,6 +254,7 @@ export default function PusdalopCreate(props) {
 
   const handleCreatePusdalop = async () => {
     try {
+      setIsConfirmationVisible(false);
       setIsLoading(true);
       const formData = new FormData();
       formData.append('id_jenis_bencana', dataPusdalop.id_jenis_bencana);
@@ -336,6 +343,7 @@ export default function PusdalopCreate(props) {
           Authorization: `Bearer ${datauser}`,
         },
       });
+      setIsLoading(false);
 
       alert('SUKSES MEMBUAT LAPORAN');
       props.navigation.navigate('Pusdalop');
@@ -505,6 +513,38 @@ export default function PusdalopCreate(props) {
 
   return (
     <View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isConfirmationVisible}
+        onRequestClose={() => setIsConfirmationVisible(false)}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              padding: 20,
+              borderRadius: 10,
+              elevation: 5,
+            }}>
+            <Text style={{color: 'black'}}>
+              Apakah anda yakin untuk mengirim laporan?
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 20,
+              }}>
+              <TouchableOpacity onPress={handleCancel}>
+                <Text style={{color: 'red', fontWeight: 'bold'}}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCreatePusdalop}>
+                <Text style={{color: 'green', fontWeight: 'bold'}}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
@@ -941,7 +981,7 @@ export default function PusdalopCreate(props) {
           </View>
           {/* end input loop image */}
           <View style={{marginTop: 10}}>
-            <Pressable style={style.buttonLogin} onPress={handleCreatePusdalop}>
+            <Pressable style={style.buttonLogin} onPress={handleConfirm}>
               {isLoading ? (
                 <ActivityIndicator
                   animating={isLoading}

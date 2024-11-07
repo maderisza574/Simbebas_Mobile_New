@@ -46,6 +46,7 @@ export default function Signin(props) {
         ...form,
         firebaseToken: firebaseToken,
       };
+      console.log('INI REQUEST DATA', requestData);
       const result = await axios.post(
         'https://apisimbebas.banyumaskab.go.id/api/v1/login',
         requestData,
